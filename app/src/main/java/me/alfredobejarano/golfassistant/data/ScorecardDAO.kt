@@ -5,14 +5,14 @@ import androidx.room.*
 @Dao
 interface ScorecardDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun createOrUpdate(scorecard: Scorecard)
+    suspend fun createOrUpdate(scorecard: Scorecard)
 
     @Query("SELECT * FROM scorecards")
-    fun readAll(): List<Scorecard>
+    suspend fun readAll(): List<Scorecard>
 
     @Query("SELECT * FROM scorecards WHERE pk = :id")
-    fun read(id: Long): List<Scorecard>
+    suspend fun read(id: Long): List<Scorecard>
 
     @Delete
-    fun delete(scorecard: Scorecard)
+    suspend fun delete(scorecard: Scorecard)
 }
