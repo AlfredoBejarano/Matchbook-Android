@@ -5,6 +5,11 @@ import java.util.*
 
 class ScorecardRepository(private val scorecardDAO: ScorecardDAO) {
     /**
+     * Retrieves all the games that the user has been keeping track of.
+     */
+    suspend fun getScoreCards() = scorecardDAO.readAll()
+
+    /**
      * Creates a [Scorecard] using the given player name as the player for said [Scorecard].
      */
     suspend fun createScorecardForPlayer(playerName: String) {
