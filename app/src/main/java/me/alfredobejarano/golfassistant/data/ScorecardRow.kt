@@ -6,16 +6,16 @@ import com.google.gson.annotations.SerializedName
 data class ScorecardRow(
     @Expose
     @SerializedName("bet")
-    val bet: Bet,
+    val bet: Bet = Bet(),
     @Expose
     @SerializedName("match")
-    val match: Int,
+    val match: Int = 0,
     @Expose
     @SerializedName("date")
-    val date: String,
+    val date: String = "",
     @Expose
     @SerializedName("handicap")
-    val handicap: Int
+    val handicap: Int = 0
 ) {
     @Expose
     @SerializedName("total")

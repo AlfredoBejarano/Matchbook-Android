@@ -6,8 +6,8 @@ import com.google.gson.annotations.SerializedName
 data class Bet(
     @Expose
     @SerializedName("earned")
-    val earned: Float,
+    val earned: Float = 0f,
     @Expose
     @SerializedName("lost")
-    val lost: Float
+    val lost: Float = 0f
 )

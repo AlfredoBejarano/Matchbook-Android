@@ -10,8 +10,8 @@ interface ScorecardDAO {
     @Query("SELECT * FROM scorecards")
     suspend fun readAll(): List<Scorecard>
 
-    @Query("SELECT * FROM scorecards WHERE pk = :id")
-    suspend fun read(id: Long): List<Scorecard>
+    @Query("SELECT * FROM scorecards WHERE pk = :id LIMIT 1")
+    suspend fun read(id: Long): Scorecard?
 
     @Delete
     suspend fun delete(scorecard: Scorecard)
