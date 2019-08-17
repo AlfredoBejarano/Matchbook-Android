@@ -49,4 +49,6 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.2.0-alpha01"
     // Google Material components
     implementation 'com.google.android.material:material:1.1.0-alpha09'
+    // GSON
+    implementation 'com.google.code.gson:gson:2.8.5'
 }
