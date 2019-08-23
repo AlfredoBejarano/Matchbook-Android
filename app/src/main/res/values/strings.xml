@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Golf Assistant</string>
+    <string name="empty_match_list">You don\'t have any match records yet Time to play golf then!</string>
 </resources>
