@@ -11,8 +11,8 @@ data class ScorecardRow(
     @SerializedName("match")
     val match: Int = 0,
     @Expose
-    @SerializedName("date")
-    val date: String = "",
+    @SerializedName("order")
+    var order: Int = 0,
     @Expose
     @SerializedName("handicap")
     val handicap: Int = 0

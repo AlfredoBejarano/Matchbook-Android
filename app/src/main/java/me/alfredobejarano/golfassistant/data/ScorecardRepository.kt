@@ -13,7 +13,7 @@ class ScorecardRepository(private val scorecardDAO: ScorecardDAO) {
      * Creates a [Scorecard] using the given player name as the player for said [Scorecard].
      */
     suspend fun createScorecardForPlayer(playerName: String) {
-        val scoreCard = Scorecard(playerName = playerName)
+        val scoreCard = Scorecard(playerName = playerName, date = generateDate())
         scorecardDAO.createOrUpdate(scoreCard)
     }
 
@@ -22,20 +22,37 @@ class ScorecardRepository(private val scorecardDAO: ScorecardDAO) {
      * @param scorecardId Id of the currently played [Scorecard]
      * @param row The row to be added.
      */
-    suspend fun updateScorecardRows(scorecardId: Long, row: ScorecardRow, deleteRow: Boolean): Scorecard? {
+    suspend fun updateScorecardRows(
+        scorecardId: Long,
+        row: ScorecardRow,
+        deleteRow: Boolean
+    ): Scorecard? {
         val scorecard = scorecardDAO.read(scorecardId) ?: return null
         val rows = scorecard.rows as? MutableList<ScorecardRow> ?: return null
-
         if (deleteRow) {
             rows.remove(row)
         } else {
-            rows.add(row)
+            setRowOrder(rows, row)
         }
-
-        val updatedScorecard = Scorecard(scorecardId, scorecard.playerName, rows)
+        val updatedScorecard = Scorecard(scorecardId, scorecard.playerName, scorecard.date)
         scorecardDAO.createOrUpdate(updatedScorecard)
 
         return updatedScorecard
+    }
+
+    /**
+     * Configures the new row order related to the other rows or deletes the row from a row list
+     * if it is set to be deleted.
+     * @param rows The list of rows to be edited
+     * @param row THe row that is being added.
+     */
+    private fun setRowOrder(rows: MutableList<ScorecardRow>, row: ScorecardRow) {
+        row.order = try {
+            rows.last().order + 1
+        } catch (e: Exception) {
+            0
+        }
+        rows.add(row)
     }
 
     /**
@@ -50,7 +67,7 @@ class ScorecardRepository(private val scorecardDAO: ScorecardDAO) {
      * Adds an empty row to a given [Scorecard] by passing its id.
      */
     suspend fun addEmptyRowToScorecard(scorecardId: Long): Scorecard? {
-        val row = ScorecardRow(date = generateDate())
+        val row = ScorecardRow()
         return updateScorecardRows(scorecardId, row, false)
     }
 }

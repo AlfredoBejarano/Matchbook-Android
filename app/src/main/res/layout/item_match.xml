@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
+    <data>
+
+        <variable
+                name="scorecard"
+                type="me.alfredobejarano.golfassistant.data.Scorecard" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
@@ -16,6 +23,7 @@
                 android:layout_marginLeft="16dp"
                 android:background="@drawable/player_name_background"
                 android:gravity="center"
+                android:text="@{scorecard.initials}"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -31,6 +39,7 @@
                 android:layout_marginEnd="16dp"
                 android:textColor="#DE000000"
                 android:textSize="16sp"
+                android:text="@{scorecard.playerName}"
                 app:layout_constraintBottom_toTopOf="@id/matchDateTextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/playerNameTextView"
