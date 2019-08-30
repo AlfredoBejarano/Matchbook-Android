@@ -2,8 +2,9 @@ package me.alfredobejarano.golfassistant.data
 
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class ScorecardRepository(private val scorecardDAO: ScorecardDAO) {
+class ScorecardRepository @Inject constructor(private val scorecardDAO: ScorecardDAO) {
     /**
      * Retrieves all the games that the user has been keeping track of.
      */

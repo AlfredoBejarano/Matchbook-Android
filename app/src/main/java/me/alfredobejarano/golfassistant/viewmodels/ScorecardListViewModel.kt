@@ -7,8 +7,10 @@ import androidx.lifecycle.ioViewModelScope
 import kotlinx.coroutines.launch
 import me.alfredobejarano.golfassistant.data.Scorecard
 import me.alfredobejarano.golfassistant.data.ScorecardRepository
+import javax.inject.Inject
 
-class ScorecardListViewModel(private val repository: ScorecardRepository) : ViewModel() {
+class ScorecardListViewModel @Inject constructor(private val repository: ScorecardRepository) :
+    ViewModel() {
     /**
      * Retrieves a list of stored Scorecard matches.
      */
