@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+                name="row"
+                type="me.alfredobejarano.golfassistant.data.ScorecardRow" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineOne"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.20" />
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineTwo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.40" />
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineThree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.60" />
+
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineFour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.80" />
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{row.date}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guidelineOne"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="30/08/2019" />
+
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{row.handicap}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guidelineTwo"
+                app:layout_constraintStart_toStartOf="@id/guidelineOne"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="1" />
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{row.match}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guidelineThree"
+                app:layout_constraintStart_toStartOf="@id/guidelineTwo"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="23" />
+
+        <TextView
+                android:id="@+id/earningsWon"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:drawableStart="@drawable/ic_arrow_upward_green_24dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@{row.bet.earned.toString()}"
+                android:textSize="12sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/earningsLoss"
+                app:layout_constraintStart_toStartOf="@id/guidelineThree"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="$600" />
+
+        <TextView
+                android:id="@+id/earningsLoss"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:drawableStart="@drawable/ic_arrow_downward_red_24dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@{row.bet.lost.toString()}"
+                android:textSize="12sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guidelineFour"
+                app:layout_constraintStart_toEndOf="@id/earningsWon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="$300" />
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{row.total.toString()}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guidelineFour"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="$300" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -70,7 +70,7 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
      * Adds an empty row to a given [Scorecard] by passing its id.
      */
     suspend fun addEmptyRowToScorecard(scorecardId: Long): Scorecard? {
-        val row = ScorecardRow()
+        val row = ScorecardRow(date = generateDate())
         return updateScorecardRows(scorecardId, row, false)
     }
 

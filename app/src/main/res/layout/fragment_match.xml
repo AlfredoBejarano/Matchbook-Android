@@ -1,107 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="16dp">
+<layout xmlns:tools="http://schemas.android.com/tools">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="16dp">
 
-    <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineOne"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.20" />
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineOne"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.20" />
 
-    <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineTwo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.40" />
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineTwo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.40" />
 
-    <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineThree"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.60" />
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineThree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.60" />
 
-    <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineFour"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.80" />
+        <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineFour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.80" />
 
-    <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/date"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/guidelineOne"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+                style="@style/ScorecardTitleTextAppearance"
+                android:text="@string/date"
+                app:layout_constraintEnd_toEndOf="@id/guidelineOne"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-    <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/handicap"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/guidelineTwo"
-            app:layout_constraintStart_toStartOf="@id/guidelineOne"
-            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+                style="@style/ScorecardTitleTextAppearance"
+                android:text="@string/handicap"
+                app:layout_constraintEnd_toEndOf="@id/guidelineTwo"
+                app:layout_constraintStart_toStartOf="@id/guidelineOne"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/match"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/guidelineThree"
-            app:layout_constraintStart_toStartOf="@id/guidelineTwo"
-            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+                style="@style/ScorecardTitleTextAppearance"
+                android:text="@string/match"
+                app:layout_constraintEnd_toEndOf="@id/guidelineThree"
+                app:layout_constraintStart_toStartOf="@id/guidelineTwo"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-            android:id="@+id/earningsTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/earnings"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/guidelineFour"
-            app:layout_constraintStart_toStartOf="@id/guidelineThree"
-            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+                android:id="@+id/earningsTitle"
+                style="@style/ScorecardTitleTextAppearance"
+                android:text="@string/earnings"
+                app:layout_constraintEnd_toEndOf="@id/guidelineFour"
+                app:layout_constraintStart_toStartOf="@id/guidelineThree"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/total"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/guidelineFour"
-            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+                style="@style/ScorecardTitleTextAppearance"
+                android:text="@string/total"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guidelineFour"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/earningsTitle" />
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/earningsTitle"
+                tools:listitem="@layout/item_scorecard_row" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/createRowButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_add_white_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

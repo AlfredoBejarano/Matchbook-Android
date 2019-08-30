@@ -15,7 +15,10 @@ data class ScorecardRow(
     var order: Int = 0,
     @Expose
     @SerializedName("handicap")
-    val handicap: Int = 0
+    val handicap: Int = 0,
+    @Expose
+    @SerializedName("date")
+    val date: String = ""
 ) {
     @Expose
     @SerializedName("total")
