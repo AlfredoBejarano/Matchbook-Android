@@ -24,6 +24,6 @@ interface GolfAssistantComponent {
         @BindsInstance
         fun setApplication(application: Application): Builder
 
-        fun setLocalDataSourceModule(localDataSourceModule: LocalDataSourceModule)
+        fun setLocalDataSourceModule(localDataSourceModule: LocalDataSourceModule): Builder
     }
 }
