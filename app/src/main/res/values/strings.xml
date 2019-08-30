@@ -3,4 +3,7 @@
     <string name="empty_match_list">You don\'t have any match records yet\nTime to play golf then!</string>
     <string name="match_with_title">Match with %s</string>
     <string name="match_start_date">Started at %s</string>
+    <string name="play_with">Play with:</string>
+    <string name="create_match">Create match</string>
+    <string name="player_name_too_short">The player name is too short!</string>
 </resources>

@@ -9,6 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.support.AndroidSupportInjection
+import me.alfredobejarano.golfassistant.adapters.ScorecardAdapter
+import me.alfredobejarano.golfassistant.data.Scorecard
 import me.alfredobejarano.golfassistant.databinding.FragmentScorecardListBinding
 import me.alfredobejarano.golfassistant.injection.ViewModelFactory
 import me.alfredobejarano.golfassistant.viewmodels.ScorecardListViewModel
@@ -25,6 +27,7 @@ class ScorecardListFragment : Fragment() {
             injectViewModelFactory()
             binding = this
             binding.matchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+            setupFABButton()
             fetchScoreCardList()
         }.root
 
@@ -33,11 +36,38 @@ class ScorecardListFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, factory)[ScorecardListViewModel::class.java]
     }
 
-    private fun fetchScoreCardList() = viewModel.getScorecardList().observe(this, Observer { list ->
+    private fun fetchScoreCardList() =
+        viewModel.getScorecardList().observe(this, Observer { list -> handleEmptyListResult(list) })
+
+    private fun displayMatches(list: List<Scorecard>) {
+        binding.matchRecyclerView.adapter = ScorecardAdapter(list)
+    }
+
+    private fun handleEmptyListResult(list: List<Scorecard>?) {
         binding.emptyListGroup.visibility = if (list.isNullOrEmpty()) {
             View.VISIBLE
         } else {
             View.GONE
         }
+        binding.matchRecyclerView.visibility = if (list.isNullOrEmpty()) {
+            View.GONE
+        } else {
+            displayMatches(list)
+            View.VISIBLE
+        }
+    }
+
+    private fun createMatch(name: String) = viewModel.createScoreCard(name).observe(this, Observer {
+        handleEmptyListResult(it)
     })
+
+
+    private fun launchAddMatchFragment() =
+        CreateMatchFragment().addButtonListener(this::createMatch).show(
+            requireFragmentManager(),
+            CreateMatchFragment.SHOW_TAG
+        )
+
+    private fun setupFABButton() =
+        binding.createScorecardButton.setOnClickListener { launchAddMatchFragment() }
 }

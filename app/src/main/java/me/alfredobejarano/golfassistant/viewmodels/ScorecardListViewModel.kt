@@ -19,4 +19,13 @@ class ScorecardListViewModel @Inject constructor(private val repository: Scoreca
         ioViewModelScope.launch { mediator.postValue(repository.getScoreCards()) }
         return mediator
     }
+
+    fun createScoreCard(playerName: String): LiveData<List<Scorecard>> {
+        val mediator = MediatorLiveData<List<Scorecard>>()
+        ioViewModelScope.launch {
+            repository.createScorecardForPlayer(playerName)
+            mediator.postValue(repository.getScoreCards())
+        }
+        return mediator
+    }
 }
