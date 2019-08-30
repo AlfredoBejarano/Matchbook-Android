@@ -9,9 +9,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import me.alfredobejarano.golfassistant.databinding.FragmentScorecardListBinding
+import me.alfredobejarano.golfassistant.injection.ViewModelFactory
 import me.alfredobejarano.golfassistant.viewmodels.ScorecardListViewModel
+import javax.inject.Inject
 
 class ScorecardListFragment : Fragment() {
+    @Inject
+    lateinit var factory: ViewModelFactory
     private lateinit var viewModel: ScorecardListViewModel
     private lateinit var binding: FragmentScorecardListBinding
 
@@ -19,8 +23,8 @@ class ScorecardListFragment : Fragment() {
         FragmentScorecardListBinding.inflate(inflater, parent, false).apply {
             binding = this
             binding.matchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-            viewModel =
-                ViewModelProviders.of(this@ScorecardListFragment)[ScorecardListViewModel::class.java]
+            viewModel = ViewModelProviders.of(this@ScorecardListFragment, factory)
+                .get(ScorecardListViewModel::class.java)
         }.root
 
     private fun fetchScoreCardList() = viewModel.getScorecardList().observe(this, Observer { list ->
