@@ -5,6 +5,7 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.support.AndroidSupportInjectionModule
+import me.alfredobejarano.golfassistant.GolfAssistantApplication
 import javax.inject.Singleton
 
 @Singleton
@@ -26,4 +27,6 @@ interface GolfAssistantComponent {
 
         fun setLocalDataSourceModule(localDataSourceModule: LocalDataSourceModule): Builder
     }
+
+    fun inject(app: GolfAssistantApplication)
 }

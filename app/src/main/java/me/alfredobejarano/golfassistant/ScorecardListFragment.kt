@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.android.support.AndroidSupportInjection
 import me.alfredobejarano.golfassistant.databinding.FragmentScorecardListBinding
 import me.alfredobejarano.golfassistant.injection.ViewModelFactory
 import me.alfredobejarano.golfassistant.viewmodels.ScorecardListViewModel
@@ -21,11 +22,16 @@ class ScorecardListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, state: Bundle?): View =
         FragmentScorecardListBinding.inflate(inflater, parent, false).apply {
+            injectViewModelFactory()
             binding = this
             binding.matchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-            viewModel = ViewModelProviders.of(this@ScorecardListFragment, factory)
-                .get(ScorecardListViewModel::class.java)
+            fetchScoreCardList()
         }.root
+
+    private fun injectViewModelFactory() {
+        AndroidSupportInjection.inject(this)
+        viewModel = ViewModelProviders.of(this, factory)[ScorecardListViewModel::class.java]
+    }
 
     private fun fetchScoreCardList() = viewModel.getScorecardList().observe(this, Observer { list ->
         binding.emptyListGroup.visibility = if (list.isNullOrEmpty()) {
