@@ -9,4 +9,9 @@
     <string name="delete">delete</string>
     <string name="match_deleted_successfully">Match deleted successfully!</string>
     <string name="undo">undo</string>
+    <string name="date">Date</string>
+    <string name="handicap">Handicap</string>
+    <string name="match">Match</string>
+    <string name="total">Total</string>
+    <string name="earnings">Earnings</string>
 </resources>
