@@ -7,9 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.AndroidSupportInjection
 import me.alfredobejarano.golfassistant.adapters.ScorecardAdapter
+import me.alfredobejarano.golfassistant.adapters.ScorecardAdapter.ScorecardViewHolder.SwipeToDeleteCallback
 import me.alfredobejarano.golfassistant.data.Scorecard
 import me.alfredobejarano.golfassistant.databinding.FragmentScorecardListBinding
 import me.alfredobejarano.golfassistant.injection.ViewModelFactory
@@ -28,6 +32,7 @@ class ScorecardListFragment : Fragment() {
             binding = this
             binding.matchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
             setupFABButton()
+            attachSwipeToDeleteHandler()
             fetchScoreCardList()
         }.root
 
@@ -37,19 +42,26 @@ class ScorecardListFragment : Fragment() {
     }
 
     private fun fetchScoreCardList() =
-        viewModel.getScorecardList().observe(this, Observer { list -> handleEmptyListResult(list) })
+        viewModel.getScorecardList().observe(
+            this,
+            Observer { list -> displayScorecardListResult(list) })
 
-    private fun displayMatches(list: List<Scorecard>) {
-        binding.matchRecyclerView.adapter = ScorecardAdapter(list)
+    private fun displayMatches(list: List<Scorecard>) = binding.matchRecyclerView.apply {
+        (adapter as? ScorecardAdapter)?.let { adapter ->
+            adapter.updateList(list)
+        } ?: run {
+            adapter = ScorecardAdapter(list)
+        }
     }
 
-    private fun handleEmptyListResult(list: List<Scorecard>?) {
+    private fun displayScorecardListResult(list: List<Scorecard>?) {
         binding.emptyListGroup.visibility = if (list.isNullOrEmpty()) {
             View.VISIBLE
         } else {
             View.GONE
         }
         binding.matchRecyclerView.visibility = if (list.isNullOrEmpty()) {
+            binding.matchRecyclerView.adapter = null
             View.GONE
         } else {
             displayMatches(list)
@@ -58,7 +70,7 @@ class ScorecardListFragment : Fragment() {
     }
 
     private fun createMatch(name: String) = viewModel.createScoreCard(name).observe(this, Observer {
-        handleEmptyListResult(it)
+        displayScorecardListResult(it)
     })
 
 
@@ -70,4 +82,33 @@ class ScorecardListFragment : Fragment() {
 
     private fun setupFABButton() =
         binding.createScorecardButton.setOnClickListener { launchAddMatchFragment() }
+
+    private fun attachSwipeToDeleteHandler() {
+        val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                (binding.matchRecyclerView.adapter as? ScorecardAdapter)?.run {
+                    deleteScorecard(getItemAtPosition(viewHolder.adapterPosition))
+                }
+            }
+        }
+        ItemTouchHelper(swipeHandler).attachToRecyclerView(binding.matchRecyclerView)
+    }
+
+    private fun deleteScorecard(scorecard: Scorecard) = viewModel
+        .deleteScoreCard(scorecard).observe(this, Observer {
+            displayScorecardListResult(it)
+            displayUndoDeleteSnackBar(scorecard)
+        })
+
+    private fun displayUndoDeleteSnackBar(scorecard: Scorecard) =
+        Snackbar.make(binding.root, R.string.match_deleted_successfully, Snackbar.LENGTH_LONG)
+            .setAction(R.string.undo) {
+                restoreScorecard(scorecard)
+            }
+            .show()
+
+    private fun restoreScorecard(scorecard: Scorecard) =
+        viewModel.restoreScorecard(scorecard).observe(
+            this,
+            Observer { displayScorecardListResult(it) })
 }

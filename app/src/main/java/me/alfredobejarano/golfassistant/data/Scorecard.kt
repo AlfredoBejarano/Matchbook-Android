@@ -14,7 +14,13 @@ data class Scorecard(
     val date: String = "",
     @ColumnInfo(name = "scorecard_rows")
     val rows: List<ScorecardRow> = emptyList()
-) {
+) : Comparable<Scorecard> {
+    override fun compareTo(other: Scorecard) = when {
+        other.id < id -> -1
+        other.id > id -> 1
+        else -> 0
+    }
+
     fun getInitials() = try {
         val names = playerName.split(" ")
         "${names.first().first()}${names.last().first()}"

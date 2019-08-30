@@ -18,6 +18,8 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
         scorecardDAO.createOrUpdate(scoreCard)
     }
 
+    suspend fun restoreScorecard(scorecard: Scorecard) = scorecardDAO.createOrUpdate(scorecard)
+
     /**
      * Add a [ScorecardRow] to the rows of the currently played [Scorecard].
      * @param scorecardId Id of the currently played [Scorecard]
@@ -71,4 +73,6 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
         val row = ScorecardRow()
         return updateScorecardRows(scorecardId, row, false)
     }
+
+    suspend fun deleteScorecard(scorecard: Scorecard) = scorecardDAO.delete(scorecard)
 }

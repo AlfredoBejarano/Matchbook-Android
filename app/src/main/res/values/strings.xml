@@ -6,4 +6,7 @@
     <string name="play_with">Play with:</string>
     <string name="create_match">Create match</string>
     <string name="player_name_too_short">The player name is too short!</string>
+    <string name="delete">delete</string>
+    <string name="match_deleted_successfully">Match deleted successfully!</string>
+    <string name="undo">undo</string>
 </resources>

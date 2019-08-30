@@ -28,4 +28,22 @@ class ScorecardListViewModel @Inject constructor(private val repository: Scoreca
         }
         return mediator
     }
+
+    fun deleteScoreCard(scorecard: Scorecard): LiveData<List<Scorecard>> {
+        val mediator = MediatorLiveData<List<Scorecard>>()
+        ioViewModelScope.launch {
+            repository.deleteScorecard(scorecard)
+            mediator.postValue(repository.getScoreCards())
+        }
+        return mediator
+    }
+
+    fun restoreScorecard(scorecard: Scorecard): LiveData<List<Scorecard>> {
+        val mediator = MediatorLiveData<List<Scorecard>>()
+        ioViewModelScope.launch {
+            repository.restoreScorecard(scorecard)
+            mediator.postValue(repository.getScoreCards())
+        }
+        return mediator
+    }
 }
