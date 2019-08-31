@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.AndroidSupportInjection
 import me.alfredobejarano.golfassistant.adapters.ScorecardAdapter
-import me.alfredobejarano.golfassistant.adapters.ScorecardAdapter.ScorecardViewHolder.SwipeToDeleteCallback
+import me.alfredobejarano.golfassistant.adapters.SwipeToDeleteCallback
 import me.alfredobejarano.golfassistant.data.Scorecard
 import me.alfredobejarano.golfassistant.databinding.FragmentScorecardListBinding
 import me.alfredobejarano.golfassistant.injection.ViewModelFactory
@@ -47,10 +48,11 @@ class ScorecardListFragment : Fragment() {
             Observer { list -> displayScorecardListResult(list) })
 
     private fun displayMatches(list: List<Scorecard>) = binding.matchRecyclerView.apply {
-        (adapter as? ScorecardAdapter)?.let { adapter ->
-            adapter.updateList(list)
-        } ?: run {
-            adapter = ScorecardAdapter(list)
+        (adapter as? ScorecardAdapter)?.updateList(list) ?: run {
+            adapter = ScorecardAdapter(list) { id ->
+                val action = ScorecardListFragmentDirections.viewScorecard(id)
+                findNavController().navigate(action)
+            }
         }
     }
 

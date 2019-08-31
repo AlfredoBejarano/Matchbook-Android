@@ -37,7 +37,7 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
         } else {
             setRowOrder(rows, row)
         }
-        val updatedScorecard = Scorecard(scorecardId, scorecard.playerName, scorecard.date)
+        val updatedScorecard = Scorecard(scorecardId, scorecard.playerName, scorecard.date, rows)
         scorecardDAO.createOrUpdate(updatedScorecard)
 
         return updatedScorecard
@@ -71,6 +71,19 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
      */
     suspend fun addEmptyRowToScorecard(scorecardId: Long): Scorecard? {
         val row = ScorecardRow(date = generateDate())
+        return updateScorecardRows(scorecardId, row, false)
+    }
+
+    suspend fun addNewRowToScorecard(
+        scorecardId: Long, handicap: Int, match: Int, won: Float,
+        loss: Float
+    ): Scorecard? {
+        val row = ScorecardRow(
+            date = generateDate(),
+            handicap = handicap,
+            match = match,
+            bet = Bet(won, loss)
+        )
         return updateScorecardRows(scorecardId, row, false)
     }
 

@@ -14,4 +14,7 @@
     <string name="match">Match</string>
     <string name="total">Total</string>
     <string name="earnings">Earnings</string>
+    <string name="add_row">Add Row</string>
+    <string name="loss">Loss</string>
+    <string name="won">Won</string>
 </resources>

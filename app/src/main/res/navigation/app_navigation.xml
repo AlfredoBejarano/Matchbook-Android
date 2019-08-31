@@ -9,5 +9,20 @@
             android:id="@+id/scorecardListFragment"
             android:name="me.alfredobejarano.golfassistant.ScorecardListFragment"
             android:label="ScorecardListFragment"
-            tools:layout="@layout/fragment_scorecard_list" />
+            tools:layout="@layout/fragment_scorecard_list" >
+        <action
+                android:id="@+id/viewScorecard"
+                app:destination="@id/matchFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/matchFragment"
+            android:name="me.alfredobejarano.golfassistant.MatchFragment"
+            android:label="MatchFragment"
+            tools:layout="@layout/fragment_match" >
+        <argument
+                android:name="scorecardId"
+                app:argType="long"
+                android:defaultValue="0L" />
+    </fragment>
+
 </navigation>

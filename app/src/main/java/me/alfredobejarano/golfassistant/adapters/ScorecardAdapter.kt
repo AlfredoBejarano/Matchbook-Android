@@ -1,26 +1,23 @@
 package me.alfredobejarano.golfassistant.adapters
 
-import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import me.alfredobejarano.golfassistant.data.Scorecard
 import me.alfredobejarano.golfassistant.databinding.ItemMatchBinding
 
-class ScorecardAdapter(private var scorecardList: List<Scorecard>) :
+class ScorecardAdapter(
+    private var scorecardList: List<Scorecard>,
+    private val onItemClick: (itemId: Long) -> Unit
+) :
     Adapter<ScorecardAdapter.ScorecardViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ScorecardViewHolder(
             ItemMatchBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false)
+                .inflate(LayoutInflater.from(parent.context), parent, false),
+            onItemClick
         )
 
     override fun getItemCount() = scorecardList.size
@@ -28,8 +25,8 @@ class ScorecardAdapter(private var scorecardList: List<Scorecard>) :
     fun getItemAtPosition(position: Int) = scorecardList[position]
 
     fun updateList(newList: List<Scorecard>) {
-        val diffUtilCalback = ScoreCardDiffUtilCalback(scorecardList, newList)
-        DiffUtil.calculateDiff(diffUtilCalback).dispatchUpdatesTo(this)
+        val diffUtilCallback = ScoreCardDiffUtilCalback(scorecardList, newList)
+        DiffUtil.calculateDiff(diffUtilCallback).dispatchUpdatesTo(this)
         scorecardList = newList
     }
 
@@ -54,44 +51,18 @@ class ScorecardAdapter(private var scorecardList: List<Scorecard>) :
                     old[oldItemPosition].rows.size == nw[newItemPosition].rows.size
     }
 
-    class ScorecardViewHolder(private val binding: ItemMatchBinding) :
+    class ScorecardViewHolder(
+        private val binding: ItemMatchBinding,
+        private val onItemClick: (itemId: Long) -> Unit
+    ) :
         ViewHolder(binding.root) {
         fun bind(scorecard: Scorecard) {
             binding.scorecard = scorecard
-        }
-
-        abstract class SwipeToDeleteCallback(private val ctx: Context) :
-            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-
-            override fun onMove(rv: RecyclerView, vh: ViewHolder, t: ViewHolder) = false
-
-            override fun onChildDraw(
-                canvas: Canvas,
-                recyclerView: RecyclerView,
-                viewHolder: ViewHolder,
-                dX: Float,
-                dY: Float,
-                actionState: Int,
-                isCurrentlyActive: Boolean
-            ) {
-                val root = viewHolder.itemView
-                createDeleteBackground(root, dX).draw(canvas)
-
-                super.onChildDraw(
-                    canvas,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
-            }
-
-            private fun createDeleteBackground(root: View, dX: Float) = ColorDrawable().apply {
-                color = Color.RED
-                setBounds(root.right + dX.toInt(), root.top, root.right, root.bottom)
+            binding.root.setOnClickListener {
+                onItemClick(scorecard.id)
             }
         }
+
+
     }
 }

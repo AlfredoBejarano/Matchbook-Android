@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -8,8 +8,7 @@
                 type="me.alfredobejarano.golfassistant.data.ScorecardRow" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="32dp"
@@ -59,7 +58,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@{row.handicap}"
+                android:text="@{row.handicapText}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guidelineTwo"
                 app:layout_constraintStart_toStartOf="@id/guidelineOne"
@@ -70,7 +69,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@{row.match}"
+                android:text="@{row.matchText}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guidelineThree"
                 app:layout_constraintStart_toStartOf="@id/guidelineTwo"
@@ -82,9 +81,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:drawableStart="@drawable/ic_arrow_upward_green_24dp"
+                android:drawableLeft="@drawable/ic_arrow_upward_green_24dp"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="@{row.bet.earned.toString()}"
+                android:text="@{row.wonEarnings}"
                 android:textSize="12sp"
                 app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -98,9 +98,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:drawableStart="@drawable/ic_arrow_downward_red_24dp"
+                android:drawableLeft="@drawable/ic_arrow_downward_red_24dp"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="@{row.bet.lost.toString()}"
+                android:text="@{row.lossEarnings}"
                 android:textSize="12sp"
                 app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -113,7 +114,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@{row.total.toString()}"
+                android:text="@{row.totalEarnings}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/guidelineFour"
