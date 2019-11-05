@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import me.alfredobejarano.golfassistant.data.ScorecardRow
 import me.alfredobejarano.golfassistant.databinding.ItemScorecardRowBinding
+import java.text.DecimalFormat
 
 class ScorecardRowAdapter(private var rows: List<ScorecardRow>) :
     RecyclerView.Adapter<ScorecardRowAdapter.ScorecardRowViewHolder>() {
@@ -16,16 +17,25 @@ class ScorecardRowAdapter(private var rows: List<ScorecardRow>) :
 
     override fun getItemCount() = rows.size
 
-    override fun onBindViewHolder(holder: ScorecardRowViewHolder, position: Int) =
-        holder.bind(rows[position])
+    override fun onBindViewHolder(holder: ScorecardRowViewHolder, position: Int) {
+        val total = if (position == 0) {
+            rows[position].total
+        } else {
+            var partialTotal = 0f
+            for (i in 0 until position + 1) {
+                partialTotal += rows[i].total
+            }
+            partialTotal
+        }
+
+        holder.bind(rows[position], total)
+    }
 
     fun updateList(newList: List<ScorecardRow>) {
         val diffUtilCallback = ScorecardRowDiffUtilCallback(rows, newList)
         DiffUtil.calculateDiff(diffUtilCallback).dispatchUpdatesTo(this)
         rows = newList
     }
-
-    fun getItemAtPosition(position: Int) = rows[position]
 
     class ScorecardRowDiffUtilCallback(
         private val old: List<ScorecardRow>,
@@ -45,8 +55,9 @@ class ScorecardRowAdapter(private var rows: List<ScorecardRow>) :
     class ScorecardRowViewHolder(private val binding: ItemScorecardRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(row: ScorecardRow) {
+        fun bind(row: ScorecardRow, total: Float) {
             binding.row = row
+            binding.total = "$${DecimalFormat("0000.##").parse(total.toString())}"
         }
     }
 }

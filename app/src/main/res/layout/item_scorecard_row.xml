@@ -7,6 +7,10 @@
         <variable
                 name="row"
                 type="me.alfredobejarano.golfassistant.data.ScorecardRow" />
+
+        <variable
+                name="total"
+                type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -112,7 +116,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@{row.totalEarnings}"
+                android:text="@{total}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/guidelineFour"
