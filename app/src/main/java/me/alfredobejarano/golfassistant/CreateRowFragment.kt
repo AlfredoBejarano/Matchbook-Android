@@ -9,7 +9,6 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_create_row.*
 import me.alfredobejarano.golfassistant.databinding.FragmentCreateRowBinding
@@ -66,44 +65,10 @@ class CreateRowFragment : DialogFragment() {
     }
 
     private fun sendFieldToObserver(listener: (won: Float, loss: Float) -> Unit) {
-        val status = evaluateFields()
-        if (status == FieldValidationError.FIELDS_OK) {
-            listener(
-                wonInput.text?.toString()?.toFloatOrNull() ?: 0f,
-                lossInput.text?.toString()?.toFloatOrNull() ?: 0f
-            )
-            dismissAllowingStateLoss()
-        } else {
-            displayErrorMessage(status)
-        }
-    }
-
-    private fun evaluateFields() = binding.run {
-        validateFields(
-            wonInput.text?.toString(),
-            lossInput.text?.toString(),
-            totalRow.text?.toString()?.replace("$", "")
+        listener(
+            wonInput.text?.toString()?.toFloatOrNull() ?: 0f,
+            lossInput.text?.toString()?.toFloatOrNull() ?: 0f
         )
-    }
-
-    private fun displayErrorMessage(error: FieldValidationError) =
-        Snackbar.make(binding.root, error.name, Snackbar.LENGTH_SHORT).show()
-
-    private fun validateFields(
-        won: String?,
-        loss: String?,
-        total: String?
-    ) = when {
-        won.isNullOrEmpty() || won.toFloatOrNull() == null -> FieldValidationError.WON_EARNINGS_INVALID
-        loss.isNullOrEmpty() || loss.toFloatOrNull() == null -> FieldValidationError.LOSS_EARNING_INVALID
-        total.isNullOrEmpty() || total.toFloatOrNull() == null -> FieldValidationError.TOTAL_INVALID
-        else -> FieldValidationError.FIELDS_OK
-    }
-
-    enum class FieldValidationError {
-        WON_EARNINGS_INVALID,
-        LOSS_EARNING_INVALID,
-        TOTAL_INVALID,
-        FIELDS_OK
+        dismissAllowingStateLoss()
     }
 }
