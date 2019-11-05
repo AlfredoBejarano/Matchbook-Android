@@ -8,16 +8,20 @@ import androidx.room.TypeConverters
 import me.alfredobejarano.golfassistant.BuildConfig
 
 @TypeConverters(ScorecardRowListTypeConverter::class)
-@Database(entities = [Scorecard::class], version = BuildConfig.VERSION_CODE)
+@Database(entities = [Scorecard::class], version = BuildConfig.VERSION_CODE, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun provideScorecarDAO(): ScorecardDAO
+    abstract fun provideScorecardDAO(): ScorecardDAO
 
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
         private fun buildDatabase(ctx: Context) =
-            Room.databaseBuilder(ctx, AppDatabase::class.java, "${BuildConfig.APPLICATION_ID}.database")
+            Room.databaseBuilder(
+                ctx,
+                AppDatabase::class.java,
+                "${BuildConfig.APPLICATION_ID}.database"
+            )
                 .fallbackToDestructiveMigration()
                 .build()
 

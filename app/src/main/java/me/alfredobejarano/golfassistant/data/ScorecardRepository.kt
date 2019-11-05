@@ -25,7 +25,7 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
      * @param scorecardId Id of the currently played [Scorecard]
      * @param row The row to be added.
      */
-    suspend fun updateScorecardRows(
+    private suspend fun updateScorecardRows(
         scorecardId: Long,
         row: ScorecardRow,
         deleteRow: Boolean
@@ -74,10 +74,22 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
         return updateScorecardRows(scorecardId, row, false)
     }
 
-    suspend fun addNewRowToScorecard(
-        scorecardId: Long, handicap: Int, match: Int, won: Float,
-        loss: Float
-    ): Scorecard? {
+    private fun getHandicapFrom(bet: Bet) = bet.run {
+        when {
+            earned > lost -> -1
+            lost > earned -> +1
+            else -> 0
+        }
+    }
+
+    private suspend fun getLastRowFrom(scorecardId: Long) =
+        scorecardDAO.read(scorecardId)?.rows?.maxBy { it.order } ?: ScorecardRow()
+
+    suspend fun addNewRowToScorecard(scorecardId: Long, won: Float, loss: Float): Scorecard? {
+        val lastRow = getLastRowFrom(scorecardId)
+        val match = lastRow.match.plus(1)
+        val handicap = getHandicapFrom(lastRow.bet)
+
         val row = ScorecardRow(
             date = generateDate(),
             handicap = handicap,

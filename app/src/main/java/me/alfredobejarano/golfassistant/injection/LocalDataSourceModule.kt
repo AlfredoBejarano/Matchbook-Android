@@ -8,5 +8,5 @@ import me.alfredobejarano.golfassistant.data.AppDatabase
 @Module
 class LocalDataSourceModule(private val application: Application) {
     @Provides
-    fun provideScorecardDAO() = AppDatabase.getInstance(application).provideScorecarDAO()
+    fun provideScorecardDAO() = AppDatabase.getInstance(application).provideScorecardDAO()
 }

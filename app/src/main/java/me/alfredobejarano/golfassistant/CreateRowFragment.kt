@@ -21,7 +21,7 @@ class CreateRowFragment : DialogFragment() {
     }
 
     private lateinit var binding: FragmentCreateRowBinding
-    private lateinit var listener: (match: Int, won: Float, loss: Float) -> Unit
+    private lateinit var listener: (won: Float, loss: Float) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +37,7 @@ class CreateRowFragment : DialogFragment() {
         dialog?.window?.run { setLayout(MATCH_PARENT, WRAP_CONTENT) }
     }
 
-    fun addButtonListener(listener: (match: Int, won: Float, loss: Float) -> Unit): CreateRowFragment {
+    fun addButtonListener(listener: (won: Float, loss: Float) -> Unit): CreateRowFragment {
         this.listener = listener
         return this
     }
@@ -50,53 +50,50 @@ class CreateRowFragment : DialogFragment() {
     @SuppressLint("SetTextI18n")
     private fun setupEarningListener(view: TextInputEditText) = view.addTextChangedListener {
         val viewValue = it.toFloat()
-        val otherViewValue = if (view.id == wonInput.id) {
+        val isWinView = view.id == wonInput.id
+        val otherViewValue = if (isWinView) {
             lossInput.text
         } else {
             wonInput.text
         }.toFloat()
 
-        binding.totalRow.text = "$${viewValue - otherViewValue}"
+        binding.totalRow.text =
+            "$${if (isWinView) viewValue - otherViewValue else otherViewValue - viewValue}"
     }
 
     private fun setupAddButton() = binding.addRowButton.setOnClickListener {
         sendFieldToObserver(listener)
     }
 
-    private fun sendFieldToObserver(listener: (match: Int, won: Float, loss: Float) -> Unit) =
-        if (evaluateFields() == FieldValidationError.FIELDS_OK) {
+    private fun sendFieldToObserver(listener: (won: Float, loss: Float) -> Unit) {
+        val status = evaluateFields()
+        if (status == FieldValidationError.FIELDS_OK) {
             listener(
-                // handicapInput.text?.toString()?.toIntOrNull() ?: 0,
-                matchInput.text?.toString()?.toIntOrNull() ?: 0,
                 wonInput.text?.toString()?.toFloatOrNull() ?: 0f,
                 lossInput.text?.toString()?.toFloatOrNull() ?: 0f
             )
             dismissAllowingStateLoss()
         } else {
-            displayErrorMessage()
+            displayErrorMessage(status)
         }
+    }
 
     private fun evaluateFields() = binding.run {
         validateFields(
-            // handicapInput.text?.toString(),
-            matchInput.text?.toString(),
             wonInput.text?.toString(),
             lossInput.text?.toString(),
-            totalRow.text?.toString()
+            totalRow.text?.toString()?.replace("$", "")
         )
     }
 
-    private fun displayErrorMessage() =
-        Snackbar.make(binding.root, R.string.player_name_too_short, Snackbar.LENGTH_SHORT).show()
+    private fun displayErrorMessage(error: FieldValidationError) =
+        Snackbar.make(binding.root, error.name, Snackbar.LENGTH_SHORT).show()
 
     private fun validateFields(
-        match: String?,
         won: String?,
         loss: String?,
         total: String?
     ) = when {
-        // handicap.isNullOrEmpty() || handicap.toIntOrNull() == null -> FieldValidationError.HANDICAP_INVALID
-        match.isNullOrEmpty() || match.toIntOrNull() == null -> FieldValidationError.MATCH_INVALID
         won.isNullOrEmpty() || won.toFloatOrNull() == null -> FieldValidationError.WON_EARNINGS_INVALID
         loss.isNullOrEmpty() || loss.toFloatOrNull() == null -> FieldValidationError.LOSS_EARNING_INVALID
         total.isNullOrEmpty() || total.toFloatOrNull() == null -> FieldValidationError.TOTAL_INVALID
@@ -104,8 +101,6 @@ class CreateRowFragment : DialogFragment() {
     }
 
     enum class FieldValidationError {
-        HANDICAP_INVALID,
-        MATCH_INVALID,
         WON_EARNINGS_INVALID,
         LOSS_EARNING_INVALID,
         TOTAL_INVALID,
