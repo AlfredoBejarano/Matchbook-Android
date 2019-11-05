@@ -29,10 +29,7 @@ class CreateMatchFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        dialog?.window?.run {
-            setLayout(MATCH_PARENT, WRAP_CONTENT)
-            //setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        }
+        dialog?.window?.run { setLayout(MATCH_PARENT, WRAP_CONTENT) }
     }
 
     fun addButtonListener(listener: (name: String) -> Unit): CreateMatchFragment {

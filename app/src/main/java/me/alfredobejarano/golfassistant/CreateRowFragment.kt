@@ -34,10 +34,7 @@ class CreateRowFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        dialog?.window?.run {
-            setLayout(MATCH_PARENT, WRAP_CONTENT)
-            //setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        }
+        dialog?.window?.run { setLayout(MATCH_PARENT, WRAP_CONTENT) }
     }
 
     fun addButtonListener(listener: (match: Int, won: Float, loss: Float) -> Unit): CreateRowFragment {
