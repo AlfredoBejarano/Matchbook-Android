@@ -74,21 +74,24 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
         return updateScorecardRows(scorecardId, row, false)
     }
 
-    private fun getHandicapFrom(bet: Bet) = bet.run {
-        when {
-            earned > lost -> -1
-            lost > earned -> +1
-            else -> 0
-        }
+    private fun getHandicapFrom(earned: Float, lost: Float) = when {
+        earned > lost -> -1
+        lost > earned -> +1
+        else -> 0
     }
 
     private suspend fun getLastRowFrom(scorecardId: Long) =
         scorecardDAO.read(scorecardId)?.rows?.maxBy { it.order } ?: ScorecardRow()
 
-    suspend fun addNewRowToScorecard(scorecardId: Long, won: Float, loss: Float): Scorecard? {
+    suspend fun addNewRowToScorecard(
+        scorecardId: Long,
+        won: Float,
+        loss: Float,
+        handicap: Int? = null
+    ): Scorecard? {
         val lastRow = getLastRowFrom(scorecardId)
         val match = lastRow.match.plus(1)
-        val handicap = lastRow.handicap + getHandicapFrom(lastRow.bet)
+        val handicap = handicap ?: lastRow.handicap + getHandicapFrom(won, loss)
 
         val row = ScorecardRow(
             date = generateDate(),

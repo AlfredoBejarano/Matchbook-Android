@@ -43,14 +43,15 @@ class MatchViewModel @Inject constructor(private val repository: ScorecardReposi
      * @param scoreCardId Id of the scorecard object to fetch.
      * @param won Money value won in the match.
      * @param loss Money value lost in the match.
+     * @param handicap Optional value for the first match.
      */
     fun createScorecardRow(
         scoreCardId: Long,
         won: Float,
-        loss: Float
+        loss: Float,
+        handicap: Int? = null
     ) = ioExecute {
-
-        repository.addNewRowToScorecard(scoreCardId, won, loss)
+        repository.addNewRowToScorecard(scoreCardId, won, loss, handicap)
         val scorecard = getScoreCardById(scoreCardId)
         scorecard?.rows ?: emptyList()
     }
