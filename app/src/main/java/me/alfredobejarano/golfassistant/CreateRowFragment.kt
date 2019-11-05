@@ -45,9 +45,9 @@ class CreateRowFragment : DialogFragment() {
         return this
     }
 
-    private fun setupEarningListeners() {
-        setupEarningListener(binding.wonInput)
-        setupEarningListener(binding.lossInput)
+    private fun setupEarningListeners() = binding.apply {
+        wonInput.run(::setupEarningListener)
+        lossInput.run(::setupEarningListener)
     }
 
     @SuppressLint("SetTextI18n")
