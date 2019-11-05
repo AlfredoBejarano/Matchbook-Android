@@ -1,5 +1,7 @@
 package me.alfredobejarano.golfassistant
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +26,14 @@ class CreateMatchFragment : DialogFragment() {
         setupAddButton()
     }.root
 
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.run {
+            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+    }
 
     fun addButtonListener(listener: (name: String) -> Unit): CreateMatchFragment {
         this.listener = listener

@@ -1,9 +1,12 @@
 package me.alfredobejarano.golfassistant
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.snackbar.Snackbar
@@ -27,6 +30,13 @@ class CreateRowFragment : DialogFragment() {
         setupEarningListeners()
     }.root
 
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.run {
+            setLayout(MATCH_PARENT, MATCH_PARENT)
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+    }
 
     fun addButtonListener(listener: (match: Int, won: Float, loss: Float) -> Unit): CreateRowFragment {
         this.listener = listener
