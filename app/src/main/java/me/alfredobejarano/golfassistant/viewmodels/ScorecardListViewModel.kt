@@ -1,49 +1,46 @@
 package me.alfredobejarano.golfassistant.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ioViewModelScope
-import kotlinx.coroutines.launch
 import me.alfredobejarano.golfassistant.data.Scorecard
 import me.alfredobejarano.golfassistant.data.ScorecardRepository
+import me.alfredobejarano.golfassistant.utils.ioExecute
 import javax.inject.Inject
 
 class ScorecardListViewModel @Inject constructor(private val repository: ScorecardRepository) :
     ViewModel() {
     /**
      * Retrieves a list of stored Scorecard matches.
+     * @return List of all the stored scorecards.
      */
-    fun getScorecardList(): LiveData<List<Scorecard>> {
-        val mediator = MediatorLiveData<List<Scorecard>>()
-        ioViewModelScope.launch { mediator.postValue(repository.getScoreCards()) }
-        return mediator
+    fun getScorecardList() = ioExecute { repository.getScoreCards() }
+
+    /**
+     * Creates a scorecard record into the local database using the given player name.
+     * @param playerName Name of the player to create the scorecard.
+     * @return List of all the stored scorecards with the new one included.
+     */
+    fun createScoreCard(playerName: String) = ioExecute {
+        repository.createScorecardForPlayer(playerName)
+        repository.getScoreCards()
     }
 
-    fun createScoreCard(playerName: String): LiveData<List<Scorecard>> {
-        val mediator = MediatorLiveData<List<Scorecard>>()
-        ioViewModelScope.launch {
-            repository.createScorecardForPlayer(playerName)
-            mediator.postValue(repository.getScoreCards())
-        }
-        return mediator
+    /**
+     * Creates a given scorecard from the database.
+     * @param scorecard Scorecard object to be deleted.
+     * @return List of all the stored scorecards without the one deleted.
+     */
+    fun deleteScoreCard(scorecard: Scorecard) = ioExecute {
+        repository.deleteScorecard(scorecard)
+        repository.getScoreCards()
     }
 
-    fun deleteScoreCard(scorecard: Scorecard): LiveData<List<Scorecard>> {
-        val mediator = MediatorLiveData<List<Scorecard>>()
-        ioViewModelScope.launch {
-            repository.deleteScorecard(scorecard)
-            mediator.postValue(repository.getScoreCards())
-        }
-        return mediator
-    }
-
-    fun restoreScorecard(scorecard: Scorecard): LiveData<List<Scorecard>> {
-        val mediator = MediatorLiveData<List<Scorecard>>()
-        ioViewModelScope.launch {
-            repository.restoreScorecard(scorecard)
-            mediator.postValue(repository.getScoreCards())
-        }
-        return mediator
+    /**
+     * Re-adds a given Scorecard object into the database.
+     * @param scorecard Scorecard object to be re-added.
+     * @return List of all the stored scorecards without the one deleted.
+     */
+    fun restoreScorecard(scorecard: Scorecard) = ioExecute {
+        repository.restoreScorecard(scorecard)
+        repository.getScoreCards()
     }
 }
