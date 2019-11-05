@@ -16,7 +16,7 @@ class CreateRowFragment : DialogFragment() {
     }
 
     private lateinit var binding: FragmentCreateRowBinding
-    private lateinit var listener: (handicap: Int, match: Int, won: Float, loss: Float) -> Unit
+    private lateinit var listener: (match: Int, won: Float, loss: Float) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,7 +28,7 @@ class CreateRowFragment : DialogFragment() {
     }.root
 
 
-    fun addButtonListener(listener: (handicap: Int, match: Int, won: Float, loss: Float) -> Unit): CreateRowFragment {
+    fun addButtonListener(listener: (match: Int, won: Float, loss: Float) -> Unit): CreateRowFragment {
         this.listener = listener
         return this
     }
@@ -54,10 +54,10 @@ class CreateRowFragment : DialogFragment() {
         sendFieldToObserver(listener)
     }
 
-    private fun sendFieldToObserver(listener: (handicap: Int, match: Int, won: Float, loss: Float) -> Unit) =
+    private fun sendFieldToObserver(listener: (match: Int, won: Float, loss: Float) -> Unit) =
         if (evaluateFields() == FieldValidationError.FIELDS_OK) {
             listener(
-                handicapInput.text?.toString()?.toIntOrNull() ?: 0,
+                // handicapInput.text?.toString()?.toIntOrNull() ?: 0,
                 matchInput.text?.toString()?.toIntOrNull() ?: 0,
                 wonInput.text?.toString()?.toFloatOrNull() ?: 0f,
                 lossInput.text?.toString()?.toFloatOrNull() ?: 0f
@@ -69,7 +69,7 @@ class CreateRowFragment : DialogFragment() {
 
     private fun evaluateFields() = binding.run {
         validateFields(
-            handicapInput.text?.toString(),
+            // handicapInput.text?.toString(),
             matchInput.text?.toString(),
             wonInput.text?.toString(),
             lossInput.text?.toString(),
@@ -81,13 +81,12 @@ class CreateRowFragment : DialogFragment() {
         Snackbar.make(binding.root, R.string.player_name_too_short, Snackbar.LENGTH_SHORT).show()
 
     private fun validateFields(
-        handicap: String?,
         match: String?,
         won: String?,
         loss: String?,
         total: String?
     ) = when {
-        handicap.isNullOrEmpty() || handicap.toIntOrNull() == null -> FieldValidationError.HANDICAP_INVALID
+        // handicap.isNullOrEmpty() || handicap.toIntOrNull() == null -> FieldValidationError.HANDICAP_INVALID
         match.isNullOrEmpty() || match.toIntOrNull() == null -> FieldValidationError.MATCH_INVALID
         won.isNullOrEmpty() || won.toFloatOrNull() == null -> FieldValidationError.WON_EARNINGS_INVALID
         loss.isNullOrEmpty() || loss.toFloatOrNull() == null -> FieldValidationError.LOSS_EARNING_INVALID

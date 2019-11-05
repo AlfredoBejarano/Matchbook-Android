@@ -40,13 +40,13 @@ class MatchFragment : Fragment() {
     private fun getScorecardId() = MatchFragmentArgs.fromBundle(arguments ?: Bundle()).scorecardId
 
     private fun getScorecardPlayerName() =
-        viewModel.retrieveScorecardName(getScorecardId()).observe(this, Observer<String> { name ->
+        viewModel.retrieveScorecardName(getScorecardId()).observe(viewLifecycleOwner, Observer<String> { name ->
             requireActivity().title =
                 String.format(Locale.getDefault(), getString(R.string.match_with_title), name)
         })
 
     private fun getScorecardRows() = viewModel.retrieveScorecardRows(getScorecardId())
-        .observe(this, Observer<List<ScorecardRow>> { rows -> drawRows(rows) })
+        .observe(viewLifecycleOwner, Observer<List<ScorecardRow>> { rows -> drawRows(rows) })
 
     private fun drawRows(rows: List<ScorecardRow>) = binding.scorecardRowList.apply {
         (adapter as? ScorecardRowAdapter)?.updateList(rows) ?: run {
@@ -60,13 +60,13 @@ class MatchFragment : Fragment() {
 
     private fun launchAddRowFragment() {
         val fragment = CreateRowFragment()
-        fragment.addButtonListener { handicap, match, won, loss ->
-            addScoreCardRow(handicap, match, won, loss)
+        fragment.addButtonListener {  match, won, loss ->
+            addScoreCardRow(match, won, loss)
         }
         fragment.show(requireFragmentManager(), CreateRowFragment.SHOW_TAG)
     }
 
-    private fun addScoreCardRow(handicap: Int, match: Int, won: Float, loss: Float) =
-        viewModel.createScorecardRow(getScorecardId(), handicap, match, won, loss)
-            .observe(this, Observer { drawRows(it) })
+    private fun addScoreCardRow(match: Int, won: Float, loss: Float) =
+        viewModel.createScorecardRow(getScorecardId(), 0, match, won, loss)
+            .observe(viewLifecycleOwner, Observer { drawRows(it) })
 }
