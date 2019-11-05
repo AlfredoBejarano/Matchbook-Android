@@ -1,11 +1,11 @@
 package me.alfredobejarano.golfassistant
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.snackbar.Snackbar
 import me.alfredobejarano.golfassistant.databinding.FragmentCreateMatchBinding
@@ -30,8 +30,8 @@ class CreateMatchFragment : DialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.run {
-            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setLayout(MATCH_PARENT, WRAP_CONTENT)
+            //setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
     }
 

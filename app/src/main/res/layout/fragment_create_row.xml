@@ -13,27 +13,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.25" />
+                app:layout_constraintGuide_percent="0.33" />
 
         <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guidelineThree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.50" />
-
-        <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guidelineFour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.75" />
+                app:layout_constraintGuide_percent="0.66" />
 
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:minWidth="100dp"
-                app:layout_constraintBottom_toTopOf="@id/addRowButton"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guidelineTwo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -50,7 +43,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:minWidth="100dp"
-                app:layout_constraintBottom_toTopOf="@id/addRowButton"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guidelineThree"
                 app:layout_constraintStart_toStartOf="@id/guidelineTwo"
                 app:layout_constraintTop_toTopOf="parent">
@@ -68,8 +61,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:minWidth="100dp"
-                app:layout_constraintBottom_toTopOf="@id/addRowButton"
-                app:layout_constraintEnd_toEndOf="@id/guidelineFour"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/guidelineThree"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -83,13 +76,15 @@
 
         <TextView
                 android:id="@+id/totalRow"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:minWidth="100dp"
-                app:layout_constraintBottom_toTopOf="@id/addRowButton"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/guidelineFour"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/wonInputContainer"
+                app:layout_constraintVertical_bias="0.100000024" />
 
         <Button
                 android:id="@+id/addRowButton"
@@ -99,7 +94,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/wonInputContainer" />
+                app:layout_constraintTop_toBottomOf="@id/totalRow"
+                app:layout_constraintVertical_bias="0.13999999" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

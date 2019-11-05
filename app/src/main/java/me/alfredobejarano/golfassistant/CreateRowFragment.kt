@@ -1,17 +1,19 @@
 package me.alfredobejarano.golfassistant
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_create_row.*
 import me.alfredobejarano.golfassistant.databinding.FragmentCreateRowBinding
+import me.alfredobejarano.golfassistant.utils.toFloat
 
 class CreateRowFragment : DialogFragment() {
     companion object {
@@ -33,8 +35,8 @@ class CreateRowFragment : DialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.run {
-            setLayout(MATCH_PARENT, MATCH_PARENT)
-            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setLayout(MATCH_PARENT, WRAP_CONTENT)
+            //setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
     }
 
@@ -44,20 +46,20 @@ class CreateRowFragment : DialogFragment() {
     }
 
     private fun setupEarningListeners() {
-        setupWonEarnings()
-        setupLossEarnings()
+        setupEarningListener(binding.wonInput)
+        setupEarningListener(binding.lossInput)
     }
 
-    private fun setupWonEarnings() = binding.wonInput.addTextChangedListener {
-        val value = it?.toString()?.toFloatOrNull() ?: 0f
-        val lossValue = binding.lossInput?.text?.toString()?.toFloatOrNull() ?: 0f
-        binding.totalRow.text = (value - lossValue).toString()
-    }
+    @SuppressLint("SetTextI18n")
+    private fun setupEarningListener(view: TextInputEditText) = view.addTextChangedListener {
+        val viewValue = it.toFloat()
+        val otherViewValue = if (view.id == wonInput.id) {
+            lossInput.text
+        } else {
+            wonInput.text
+        }.toFloat()
 
-    private fun setupLossEarnings() = binding.lossInput.addTextChangedListener {
-        val value = it?.toString()?.toFloatOrNull() ?: 0f
-        val wonValue = binding.wonInput?.text?.toString()?.toFloatOrNull() ?: 0f
-        binding.totalRow.text = (wonValue - value).toString()
+        binding.totalRow.text = "$${viewValue - otherViewValue}"
     }
 
     private fun setupAddButton() = binding.addRowButton.setOnClickListener {
