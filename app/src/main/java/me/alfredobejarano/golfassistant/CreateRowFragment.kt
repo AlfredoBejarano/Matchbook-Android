@@ -19,13 +19,15 @@ class CreateRowFragment : DialogFragment() {
         const val SHOW_TAG = "CREATE_ROW_FRAGMENT"
     }
 
+    private var withHandicap = true
     private lateinit var binding: FragmentCreateRowBinding
-    private lateinit var listener: (won: Float, loss: Float) -> Unit
+    private lateinit var listener: (won: Float, loss: Float, handicap: Int?) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?, state: Bundle?
     ): View = FragmentCreateRowBinding.inflate(inflater, container, false).apply {
+        handicapInputContainer.visibility = if (withHandicap) View.VISIBLE else View.GONE
         binding = this
         setupAddButton()
         setupEarningListeners()
@@ -36,7 +38,7 @@ class CreateRowFragment : DialogFragment() {
         dialog?.window?.run { setLayout(MATCH_PARENT, WRAP_CONTENT) }
     }
 
-    fun addButtonListener(listener: (won: Float, loss: Float) -> Unit): CreateRowFragment {
+    fun addButtonListener(listener: (won: Float, loss: Float, handicap: Int?) -> Unit): CreateRowFragment {
         this.listener = listener
         return this
     }
@@ -64,11 +66,16 @@ class CreateRowFragment : DialogFragment() {
         sendFieldToObserver(listener)
     }
 
-    private fun sendFieldToObserver(listener: (won: Float, loss: Float) -> Unit) {
+    private fun sendFieldToObserver(listener: (won: Float, loss: Float, handicap: Int?) -> Unit) {
         listener(
             wonInput.text?.toString()?.toFloatOrNull() ?: 0f,
-            lossInput.text?.toString()?.toFloatOrNull() ?: 0f
+            lossInput.text?.toString()?.toFloatOrNull() ?: 0f,
+            handicapInput.text?.toString()?.toIntOrNull()
         )
         dismissAllowingStateLoss()
+    }
+
+    fun setHandicap(handicap: Boolean) {
+        withHandicap = handicap
     }
 }

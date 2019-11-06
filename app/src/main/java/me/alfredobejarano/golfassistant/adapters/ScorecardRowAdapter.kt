@@ -56,8 +56,8 @@ class ScorecardRowAdapter(private var rows: List<ScorecardRow>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(row: ScorecardRow, total: Float) {
-            binding.row = row
             binding.total = "$${DecimalFormat("0000.##").parse(total.toString())}"
+            binding.row = row
         }
     }
 }

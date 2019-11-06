@@ -10,13 +10,33 @@
             android:padding="16dp">
 
         <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/handicapInputContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minWidth="100dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/wonInputContainer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="166dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/handicapInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/handicap"
+                    android:inputType="numberSigned" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/wonInputContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:minWidth="100dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/lossInputContainer"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/handicapInputContainer"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_editor_absoluteX="166dp">
 

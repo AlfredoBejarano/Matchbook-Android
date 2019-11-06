@@ -17,6 +17,7 @@ import java.util.*
 import javax.inject.Inject
 
 class MatchFragment : Fragment() {
+    private var withHandicap = true
     @Inject
     lateinit var factory: ViewModelFactory
     private lateinit var viewModel: MatchViewModel
@@ -49,9 +50,12 @@ class MatchFragment : Fragment() {
     private fun getScorecardRows() = viewModel.retrieveScorecardRows(getScorecardId())
         .observe(viewLifecycleOwner, Observer<List<ScorecardRow>> { rows -> drawRows(rows) })
 
-    private fun drawRows(rows: List<ScorecardRow>) = binding.scorecardRowList.apply {
-        (adapter as? ScorecardRowAdapter)?.updateList(rows) ?: run {
-            adapter = ScorecardRowAdapter(rows)
+    private fun drawRows(rows: List<ScorecardRow>) {
+        withHandicap = rows.isNullOrEmpty()
+        binding.scorecardRowList.apply {
+            (adapter as? ScorecardRowAdapter)?.updateList(rows) ?: run {
+                adapter = ScorecardRowAdapter(rows)
+            }
         }
     }
 
@@ -61,12 +65,12 @@ class MatchFragment : Fragment() {
 
     private fun launchAddRowFragment() {
         val fragment = CreateRowFragment()
+        fragment.setHandicap(withHandicap)
         fragment.addButtonListener(::addScoreCardRow)
         fragment.show(childFragmentManager, CreateRowFragment.SHOW_TAG)
     }
 
-    private fun addScoreCardRow(won: Float, loss: Float) =
-        viewModel.createScorecardRow(getScorecardId(), won, loss).observe(
-            viewLifecycleOwner,
-            Observer { drawRows(it) })
+    private fun addScoreCardRow(won: Float, loss: Float, handicap: Int?) =
+        viewModel.createScorecardRow(getScorecardId(), won, loss, handicap).observe(
+            viewLifecycleOwner, Observer { drawRows(it) })
 }

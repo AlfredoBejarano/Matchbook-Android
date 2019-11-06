@@ -9,12 +9,12 @@ abstract class BindingAdapter {
         @JvmStatic
         @BindingAdapter("earnings")
         fun setEarnings(field: TextView, earnings: String) {
+            field.text = earnings
             field.visibility = if (earnings.length <= 3 && earnings.last() == '0') {
                 View.GONE
             } else {
                 View.VISIBLE
             }
-            field.text = earnings
         }
     }
 }

@@ -92,7 +92,7 @@
                 android:maxLines="1"
                 app:earnings="@{row.wonEarnings}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/earningsLoss"
+                app:layout_constraintEnd_toEndOf="@id/guidelineFour"
                 app:layout_constraintStart_toStartOf="@id/guidelineThree"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="$600" />
@@ -107,7 +107,7 @@
                 app:earnings="@{row.lossEarnings}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guidelineFour"
-                app:layout_constraintStart_toEndOf="@id/earningsWon"
+                app:layout_constraintStart_toStartOf="@id/guidelineThree"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="$300"
                 tools:visibility="gone" />
