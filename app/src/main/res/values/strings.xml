@@ -17,4 +17,8 @@
     <string name="add_row">Add Row</string>
     <string name="loss">Loss</string>
     <string name="won">Won</string>
+    <string name="delete_dialog_title">Delete match</string>
+    <string name="are_you_sure_you_want_to_delete_the_match">Are you sure you want to delete this match?</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
 </resources>

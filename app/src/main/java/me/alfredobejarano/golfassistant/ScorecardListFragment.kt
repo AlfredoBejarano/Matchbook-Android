@@ -1,5 +1,6 @@
 package me.alfredobejarano.golfassistant
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +45,7 @@ class ScorecardListFragment : Fragment() {
 
     private fun fetchScoreCardList() =
         viewModel.getScorecardList().observe(
-            this,
+            viewLifecycleOwner,
             Observer { list -> displayScorecardListResult(list) })
 
     private fun displayMatches(list: List<Scorecard>) = binding.matchRecyclerView.apply {
@@ -86,10 +87,11 @@ class ScorecardListFragment : Fragment() {
         binding.createScorecardButton.setOnClickListener { launchAddMatchFragment() }
 
     private fun attachSwipeToDeleteHandler() {
-        val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
+        val swipeHandler = object : SwipeToDeleteCallback() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 (binding.matchRecyclerView.adapter as? ScorecardAdapter)?.run {
-                    deleteScorecard(getItemAtPosition(viewHolder.adapterPosition))
+                    showDeleteMatchPrompt(getItemAtPosition(viewHolder.adapterPosition))
+                    notifyDataSetChanged()
                 }
             }
         }
@@ -113,4 +115,11 @@ class ScorecardListFragment : Fragment() {
         viewModel.restoreScorecard(scorecard).observe(
             this,
             Observer { displayScorecardListResult(it) })
+
+    private fun showDeleteMatchPrompt(scorecard: Scorecard) = AlertDialog.Builder(requireContext())
+        .setTitle(R.string.delete_dialog_title)
+        .setMessage(R.string.are_you_sure_you_want_to_delete_the_match)
+        .setPositiveButton(R.string.yes) { _, _ -> deleteScorecard(scorecard) }
+        .setNegativeButton(R.string.cancel) { dialog, _ -> dialog?.dismiss() }
+        .show()
 }
