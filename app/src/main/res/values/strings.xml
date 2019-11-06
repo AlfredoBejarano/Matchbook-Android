@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Golf Assistant</string>
+    <string name="app_name">Matchbook</string>
     <string name="empty_match_list">You don\'t have any match records yet\nTime to play golf!</string>
     <string name="match_with_title">Match with %s</string>
     <string name="match_start_date">Started at %s</string>
