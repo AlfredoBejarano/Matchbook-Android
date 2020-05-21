@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -13,9 +14,9 @@
                 type="String" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="40dp"
             android:orientation="vertical">
 
         <androidx.constraintlayout.widget.Guideline
@@ -48,9 +49,10 @@
 
         <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:autoSizeTextType="uniform"
                 android:gravity="center"
+                android:maxLines="1"
                 android:text="@{row.date}"
                 app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -86,10 +88,12 @@
         <TextView
                 android:id="@+id/earningsWon"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_arrow_upward_green_24dp"
                 android:gravity="center"
                 android:maxLines="1"
+                android:visibility="gone"
+                app:autoSizeTextType="uniform"
                 app:earnings="@{row.wonEarnings}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guidelineFour"
@@ -100,23 +104,26 @@
         <TextView
                 android:id="@+id/earningsLoss"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_arrow_downward_red_24dp"
                 android:gravity="center"
                 android:maxLines="1"
+                android:visibility="gone"
+                app:autoSizeTextType="uniform"
                 app:earnings="@{row.lossEarnings}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guidelineFour"
                 app:layout_constraintStart_toStartOf="@id/guidelineThree"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="$300"
-                tools:visibility="gone" />
+                tools:text="$300" />
 
         <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:maxLines="1"
                 android:text="@{total}"
+                app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/guidelineFour"

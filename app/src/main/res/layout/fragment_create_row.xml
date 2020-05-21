@@ -9,6 +9,19 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+        <TextView
+                android:text="@string/register_play"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintVertical_bias="0"
+                android:textColor="?android:attr/textColorPrimary"
+                app:layout_constraintBottom_toTopOf="@id/wonInputContainer"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+
         <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/handicapInputContainer"
                 android:layout_width="0dp"
@@ -78,16 +91,22 @@
                 app:layout_constraintTop_toBottomOf="@id/wonInputContainer"
                 app:layout_constraintVertical_bias="0.100000024" />
 
-        <Button
+        <TextView
+                android:textAllCaps="true"
+                android:textColor="?android:attr/colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 android:id="@+id/addRowButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_row"
+                android:background="?android:attr/selectableItemBackground"
+                app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/totalRow"
-                app:layout_constraintVertical_bias="0.13999999" />
+                app:layout_constraintVertical_bias="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

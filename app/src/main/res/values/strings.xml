@@ -6,7 +6,7 @@
     <string name="play_with">Play with:</string>
     <string name="create_match">Create match</string>
     <string name="player_name_too_short">The player name is too short!</string>
-    <string name="delete">delete</string>
+    <string name="delete">Delete</string>
     <string name="match_deleted_successfully">Match deleted successfully!</string>
     <string name="undo">undo</string>
     <string name="date">Date</string>
@@ -17,8 +17,8 @@
     <string name="add_row">Add Row</string>
     <string name="loss">Loss</string>
     <string name="won">Won</string>
+    <string name="register_play">Register play</string>
     <string name="delete_dialog_title">Delete match</string>
     <string name="are_you_sure_you_want_to_delete_the_match">Are you sure you want to delete this match?</string>
-    <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
 </resources>

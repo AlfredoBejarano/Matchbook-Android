@@ -119,7 +119,7 @@ class ScorecardListFragment : Fragment() {
     private fun showDeleteMatchPrompt(scorecard: Scorecard) = AlertDialog.Builder(requireContext())
         .setTitle(R.string.delete_dialog_title)
         .setMessage(R.string.are_you_sure_you_want_to_delete_the_match)
-        .setPositiveButton(R.string.yes) { _, _ -> deleteScorecard(scorecard) }
+        .setPositiveButton(R.string.delete) { _, _ -> deleteScorecard(scorecard) }
         .setNegativeButton(R.string.cancel) { dialog, _ -> dialog?.dismiss() }
         .show()
 }
