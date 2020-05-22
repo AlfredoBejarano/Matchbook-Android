@@ -10,7 +10,7 @@ data class ScorecardRow(
     val bet: Bet = Bet(),
     @Expose
     @SerializedName("match")
-    val match: Int = 0,
+    val match: String = "",
     @Expose
     @SerializedName("order")
     var order: Int = 0,
@@ -35,6 +35,7 @@ data class ScorecardRow(
     @SerializedName("total")
     val total = bet.earned - bet.lost
 
+    fun isLoss() = total < 0
     fun getMatchText() = match.toString()
     fun getHandicapText() = handicap.toString()
     fun getWonEarnings() = "$${DecimalFormat("0000.##").parse(bet.earned.toString())}"

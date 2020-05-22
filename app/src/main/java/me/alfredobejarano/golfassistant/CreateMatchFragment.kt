@@ -8,6 +8,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.fragment_create_match.*
 import me.alfredobejarano.golfassistant.databinding.FragmentCreateMatchBinding
 
 class CreateMatchFragment : DialogFragment() {
@@ -43,10 +44,10 @@ class CreateMatchFragment : DialogFragment() {
 
     private fun sendPlayerNameToObserver(name: String?, listener: (name: String) -> Unit) =
         if (evaluateName(name)) {
-            listener(name!!)
+            listener(name.orEmpty())
             dismissAllowingStateLoss()
         } else {
-            displayErrorMessage()
+            playerNameInput.error = getString(R.string.player_name_too_short)
         }
 
     private fun evaluateName(name: String?) = when {
@@ -54,7 +55,4 @@ class CreateMatchFragment : DialogFragment() {
         name.length < 2 -> false
         else -> true
     }
-
-    private fun displayErrorMessage() =
-        Snackbar.make(binding.root, R.string.player_name_too_short, Snackbar.LENGTH_SHORT).show()
 }

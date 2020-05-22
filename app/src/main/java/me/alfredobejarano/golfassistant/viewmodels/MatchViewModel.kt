@@ -49,9 +49,10 @@ class MatchViewModel @Inject constructor(private val repository: ScorecardReposi
         scoreCardId: Long,
         won: Float,
         loss: Float,
+        match: String,
         handicap: Int? = null
     ) = ioExecute {
-        repository.addNewRowToScorecard(scoreCardId, won, loss, handicap)
+        repository.addNewRowToScorecard(scoreCardId, won, loss, match, handicap)
         val scorecard = getScoreCardById(scoreCardId)
         scorecard?.rows ?: emptyList()
     }

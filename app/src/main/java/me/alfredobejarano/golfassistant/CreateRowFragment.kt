@@ -1,18 +1,15 @@
 package me.alfredobejarano.golfassistant
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import androidx.core.widget.addTextChangedListener
+import android.widget.EditText
 import androidx.fragment.app.DialogFragment
-import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_create_row.*
 import me.alfredobejarano.golfassistant.databinding.FragmentCreateRowBinding
-import me.alfredobejarano.golfassistant.utils.toFloat
 
 class CreateRowFragment : DialogFragment() {
     companion object {
@@ -21,7 +18,7 @@ class CreateRowFragment : DialogFragment() {
 
     private var withHandicap = true
     private lateinit var binding: FragmentCreateRowBinding
-    private lateinit var listener: (won: Float, loss: Float, handicap: Int?) -> Unit
+    private lateinit var listener: (handicap: Int?, match: String, moneyAmount: Float, isLoss: Boolean) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,53 +26,61 @@ class CreateRowFragment : DialogFragment() {
     ): View = FragmentCreateRowBinding.inflate(inflater, container, false).apply {
         handicapInputContainer.visibility = if (withHandicap) View.VISIBLE else View.GONE
         binding = this
-        setupAddButton()
-        setupEarningListeners()
     }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupAddButton()
+    }
 
     override fun onStart() {
         super.onStart()
         dialog?.window?.run { setLayout(MATCH_PARENT, WRAP_CONTENT) }
     }
 
-    fun addButtonListener(listener: (won: Float, loss: Float, handicap: Int?) -> Unit): CreateRowFragment {
+    fun addButtonListener(listener: (handicap: Int?, match: String, moneyAmount: Float, isLoss: Boolean) -> Unit): CreateRowFragment {
         this.listener = listener
         return this
-    }
-
-    private fun setupEarningListeners() = binding.apply {
-        wonInput.run(::setupEarningListener)
-        lossInput.run(::setupEarningListener)
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun setupEarningListener(view: TextInputEditText) = view.addTextChangedListener {
-        val viewValue = it.toFloat()
-        val isWinView = view.id == wonInput.id
-        val otherViewValue = if (isWinView) {
-            lossInput.text
-        } else {
-            wonInput.text
-        }.toFloat()
-
-        binding.totalRow.text =
-            "$${if (isWinView) viewValue - otherViewValue else otherViewValue - viewValue}"
     }
 
     private fun setupAddButton() = binding.addRowButton.setOnClickListener {
         sendFieldToObserver(listener)
     }
 
-    private fun sendFieldToObserver(listener: (won: Float, loss: Float, handicap: Int?) -> Unit) {
-        listener(
-            wonInput.text?.toString()?.toFloatOrNull() ?: 0f,
-            lossInput.text?.toString()?.toFloatOrNull() ?: 0f,
-            handicapInput.text?.toString()?.toIntOrNull()
-        )
-        dismissAllowingStateLoss()
+    private fun sendFieldToObserver(listener: (handicap: Int?, match: String, moneyAmount: Float, isLoss: Boolean) -> Unit) {
+        checkFields(handicapInput, matchInput, moneyAmountInput) {
+            listener(
+                handicapInput.text?.toString()?.toIntOrNull(),
+                matchInput.text?.toString().orEmpty(),
+                moneyAmountInput.text?.toString()?.toFloatOrNull() ?: 0f,
+                isLossCheckBox.isChecked
+            )
+            dismissAllowingStateLoss()
+        }
     }
 
     fun setHandicap(handicap: Boolean) {
         withHandicap = handicap
+    }
+
+    private fun checkField(editText: EditText?): Boolean {
+        val empty = editText?.text.isNullOrBlank()
+        if(empty) {
+            editText?.error = getString(R.string.please_fill_this_field)
+        }
+        return !empty
+    }
+
+    private fun checkFields(vararg views: EditText?, onSuccess: () -> Unit) {
+        var filled = false
+        if (!views.isNullOrEmpty()) {
+            views.forEach {
+                filled = checkField(it)
+                if (!filled) return@forEach
+            }
+        }
+        if (filled) {
+            onSuccess()
+        }
     }
 }

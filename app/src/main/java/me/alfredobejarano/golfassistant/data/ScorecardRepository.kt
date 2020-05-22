@@ -87,15 +87,15 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
         scorecardId: Long,
         won: Float,
         loss: Float,
+        match: String,
         handicap: Int? = null
     ): Scorecard? {
         val lastRow = getLastRowFrom(scorecardId)
-        val match = lastRow.match.plus(1)
-        val handicap = handicap ?: lastRow.handicap + getHandicapFrom(won, loss)
+        val newHandicap = handicap ?: lastRow.handicap + getHandicapFrom(won, loss)
 
         val row = ScorecardRow(
             date = generateDate(),
-            handicap = handicap,
+            handicap = newHandicap,
             match = match,
             bet = Bet(won, loss)
         )

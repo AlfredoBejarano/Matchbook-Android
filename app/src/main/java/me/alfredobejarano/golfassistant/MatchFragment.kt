@@ -70,7 +70,10 @@ class MatchFragment : Fragment() {
         fragment.show(childFragmentManager, CreateRowFragment.SHOW_TAG)
     }
 
-    private fun addScoreCardRow(won: Float, loss: Float, handicap: Int?) =
-        viewModel.createScorecardRow(getScorecardId(), won, loss, handicap).observe(
+    private fun addScoreCardRow(handicap: Int?, match: String, moneyAmount: Float, isLoss: Boolean) {
+        val won = if(isLoss) 0f else moneyAmount
+        val loss = if(isLoss) moneyAmount else 0f
+        viewModel.createScorecardRow(getScorecardId(), won, loss, match, handicap).observe(
             viewLifecycleOwner, Observer { drawRows(it) })
+    }
 }

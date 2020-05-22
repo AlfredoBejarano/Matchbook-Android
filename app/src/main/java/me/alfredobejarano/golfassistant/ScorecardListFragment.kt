@@ -36,6 +36,7 @@ class ScorecardListFragment : Fragment() {
             setupFABButton()
             attachSwipeToDeleteHandler()
             fetchScoreCardList()
+            requireActivity().title = getString(R.string.app_name)
         }.root
 
     private fun injectViewModelFactory() {
