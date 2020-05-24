@@ -3,6 +3,7 @@ package me.alfredobejarano.golfassistant.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 @Entity(tableName = "scorecards")
 data class Scorecard(
@@ -24,7 +25,7 @@ data class Scorecard(
 
     fun getInitials() = try {
         val names = playerName.split(" ")
-        "${names.first().first()}${names.last().first()}"
+        "${names.first().first()}${names.last().first()}".toUpperCase(Locale.getDefault())
     } catch (e: Exception) {
         playerName.take(2)
     }
