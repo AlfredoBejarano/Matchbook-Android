@@ -4,8 +4,8 @@
         xmlns:tools="http://schemas.android.com/tools">
     <item
             android:id="@+id/match_handicap_badge"
-            android:actionLayout="@layout/item_menu_handicap"
-            app:showAsAction="always" />
+            app:showAsAction="always"
+            tools:ignore="MenuTitle" />
 
     <item
             android:id="@+id/match_note_edit"

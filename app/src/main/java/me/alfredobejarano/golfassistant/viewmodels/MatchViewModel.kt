@@ -11,15 +11,19 @@ import javax.inject.Inject
 
 class MatchViewModel @Inject constructor(private val repository: ScorecardRepository) :
     ViewModel() {
+    private var scoreCardId: Long = 0L
 
     private val _nextHandicapLiveData = MutableLiveData<Int>()
     val nextHandicapLiveData = _nextHandicapLiveData as LiveData<Int>
 
+    fun setScoreCardId(id: Long?) {
+        scoreCardId = id ?: 0L
+    }
+
     /**
      * Retrieves a [Scorecard] object by its database ID.
-     * @param scoreCardId Id of the scorecard object to fetch.
      */
-    private suspend fun getScoreCardById(scoreCardId: Long): Scorecard? = try {
+    private suspend fun getScoreCard(): Scorecard? = try {
         repository.getScoreCards().first { it.id == scoreCardId }
     } catch (e: Exception) {
         null
@@ -27,10 +31,9 @@ class MatchViewModel @Inject constructor(private val repository: ScorecardReposi
 
     /**
      * Retrieves the player name stored in a given [Scorecard].
-     * @param scoreCardId Id of the scorecard object to fetch.
      */
-    fun retrieveScorecardName(scoreCardId: Long) = ioExecute {
-        val scoreCard = getScoreCardById(scoreCardId) ?: Scorecard()
+    fun retrieveScorecardName() = ioExecute {
+        val scoreCard = getScoreCard() ?: Scorecard()
         scoreCard.playerName
     }
 
@@ -38,30 +41,41 @@ class MatchViewModel @Inject constructor(private val repository: ScorecardReposi
      * Retrieves the player match rows stored in a given [Scorecard].
      * @param scoreCardId Id of the scorecard object to fetch.
      */
-    fun retrieveScorecardRows(scoreCardId: Long) = ioExecute {
-        val scoreCard = getScoreCardById(scoreCardId) ?: Scorecard()
+    fun retrieveScorecardRows() = ioExecute {
+        val scoreCard = getScoreCard() ?: Scorecard()
         val rows = scoreCard.rows
         predictNextMatchHandicap(rows)
     }
 
     /**
      * Creates a new Row into a given scorecard object.
-     * @param scoreCardId Id of the scorecard object to fetch.
      * @param won Money value won in the match.
      * @param loss Money value lost in the match.
      * @param handicap Optional value for the first match.
      */
-    fun createScorecardRow(
-        scoreCardId: Long,
-        won: Float,
-        loss: Float,
-        match: String,
-        handicap: Int? = null
-    ) = ioExecute {
-        repository.addNewRowToScorecard(scoreCardId, won, loss, match, handicap)
-        val scorecard = getScoreCardById(scoreCardId)
-        val rows = scorecard?.rows ?: emptyList()
-        predictNextMatchHandicap(rows)
+    fun createScorecardRow(won: Float, loss: Float, match: String, handicap: Int? = null) =
+        ioExecute {
+            repository.addNewRowToScorecard(scoreCardId, won, loss, match, handicap)
+            val scorecard = getScoreCard()
+            val rows = scorecard?.rows ?: emptyList()
+            predictNextMatchHandicap(rows)
+        }
+
+    /**
+     * Updates the note of the curent [Scorecard].
+     */
+    fun updateScorecardNote(note: String) = ioExecute {
+        getScoreCard()?.run {
+            this.note = note
+            repository.restoreScorecard(this)
+        }
+    }
+
+    /**
+     * Retrieves the [Scorecard] message.
+     */
+    fun getScoreCardMessage() = ioExecute {
+        getScoreCard()?.note
     }
 
     /**

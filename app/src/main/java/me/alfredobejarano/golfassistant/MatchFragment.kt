@@ -2,7 +2,7 @@ package me.alfredobejarano.golfassistant
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -37,25 +37,26 @@ class MatchFragment : Fragment() {
     ) = FragmentMatchBinding.inflate(inflater, container, false).apply {
         AndroidSupportInjection.inject(this@MatchFragment)
         binding = this
-        viewModel = ViewModelProviders.of(this@MatchFragment, factory)[MatchViewModel::class.java]
-
         scorecardRowList.layoutManager = LinearLayoutManager(context)
+        viewModel = ViewModelProviders.of(this@MatchFragment, factory)[MatchViewModel::class.java]
+        getScorecardId()
         observePredictedHandicap()
         getScorecardPlayerName()
         getScorecardRows()
         setupAddButton()
     }.root
 
-    private fun getScorecardId() = MatchFragmentArgs.fromBundle(arguments ?: Bundle()).scorecardId
+    private fun getScorecardId() =
+        viewModel.setScoreCardId(MatchFragmentArgs.fromBundle(arguments ?: Bundle()).scorecardId)
 
     private fun getScorecardPlayerName() =
-        viewModel.retrieveScorecardName(getScorecardId()).observe(
+        viewModel.retrieveScorecardName().observe(
             viewLifecycleOwner, Observer<String> { name ->
                 requireActivity().title =
                     String.format(Locale.getDefault(), getString(R.string.match_with_title), name)
             })
 
-    private fun getScorecardRows() = viewModel.retrieveScorecardRows(getScorecardId())
+    private fun getScorecardRows() = viewModel.retrieveScorecardRows()
         .observe(viewLifecycleOwner, Observer { rows -> drawRows(rows) })
 
     private fun drawRows(rows: List<ScorecardRow>) {
@@ -81,7 +82,7 @@ class MatchFragment : Fragment() {
     private fun addScoreCardRow(handicap: Int?, match: String, money: Float, isLoss: Boolean) {
         val won = if (isLoss) 0f else money
         val loss = if (isLoss) money else 0f
-        viewModel.createScorecardRow(getScorecardId(), won, loss, match, handicap).observe(
+        viewModel.createScorecardRow(won, loss, match, handicap).observe(
             viewLifecycleOwner, Observer { drawRows(it) })
     }
 
@@ -95,6 +96,20 @@ class MatchFragment : Fragment() {
         requireActivity().invalidateOptionsMenu()
     }
 
+    private fun launchMatchNoteEditor() =
+        viewModel.getScoreCardMessage().observe(this, Observer { note ->
+            EditMatchNoteFragment().apply {
+                setNote(note)
+                setMessageListener(this@MatchFragment::observeNoteEdit)
+            }.show(childFragmentManager, EditMatchNoteFragment.SHOW_TAG)
+        })
+
+    private fun observeNoteEdit(dialogFragment: DialogFragment, note: String) {
+        viewModel.updateScorecardNote(note).observe(viewLifecycleOwner, Observer {
+            it?.run { dialogFragment.dismissAllowingStateLoss() }
+        })
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_match_fragment, menu)
         menu.findItem(R.id.match_handicap_badge)?.title = predictedHandicap?.toString().orEmpty()
@@ -103,7 +118,7 @@ class MatchFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.match_note_edit) {
-            Toast.makeText(requireContext(), "R.id.match_note_edit", Toast.LENGTH_SHORT).show()
+            launchMatchNoteEditor()
         }
         return super.onOptionsItemSelected(item)
     }

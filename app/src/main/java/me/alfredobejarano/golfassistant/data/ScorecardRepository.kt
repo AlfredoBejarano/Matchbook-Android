@@ -18,6 +18,9 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
         scorecardDAO.createOrUpdate(scoreCard)
     }
 
+    /**
+     * Re-adds a given [Scorecard] item to the database.
+     */
     suspend fun restoreScorecard(scorecard: Scorecard) = scorecardDAO.createOrUpdate(scorecard)
 
     /**
@@ -67,22 +70,26 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
     }
 
     /**
-     * Adds an empty row to a given [Scorecard] by passing its id.
+     * Calculates the addition to the handicap for a [ScorecardRow] object.
+     * @return Int, the value to add for the [ScorecardRow] handicap.
      */
-    suspend fun addEmptyRowToScorecard(scorecardId: Long): Scorecard? {
-        val row = ScorecardRow(date = generateDate())
-        return updateScorecardRows(scorecardId, row, false)
-    }
-
     private fun getHandicapFrom(earned: Float, lost: Float) = when {
         earned > lost -> -1
         lost > earned -> +1
         else -> 0
     }
 
+    /**
+     * Retrieves the last Row from a given [Scorecard].
+     * @param scorecardId Id of the [Scorecard] to fetch the id from.
+     * @return Last [ScorecardRow] item of the list.
+     */
     private suspend fun getLastRowFrom(scorecardId: Long) =
         scorecardDAO.read(scorecardId)?.rows?.maxBy { it.order } ?: ScorecardRow()
 
+    /**
+     * Adds a new [ScorecardRow] to a given [Scorecard].
+     */
     suspend fun addNewRowToScorecard(
         scorecardId: Long,
         won: Float,
@@ -102,5 +109,8 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
         return updateScorecardRows(scorecardId, row, false)
     }
 
+    /**
+     * Deletes a given [Scorecard].
+     */
     suspend fun deleteScorecard(scorecard: Scorecard) = scorecardDAO.delete(scorecard)
 }
