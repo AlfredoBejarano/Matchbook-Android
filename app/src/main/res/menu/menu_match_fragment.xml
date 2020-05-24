@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+    <item
+            android:id="@+id/match_handicap_badge"
+            android:actionLayout="@layout/item_menu_handicap"
+            app:showAsAction="always" />
+
     <item
             android:id="@+id/match_note_edit"
             android:icon="@drawable/ic_note_add_black_24dp"
             android:title="@string/edit_note"
-            app:showAsAction="ifRoom" />
-
-    <item
-            android:id="@+id/match_handicap_badge"
-            android:actionLayout="@layout/item_menu_handicap"
-            android:title="@string/predicted_handicap"
             app:showAsAction="ifRoom" />
 </menu>

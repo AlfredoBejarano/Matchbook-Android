@@ -1,13 +1,19 @@
 package me.alfredobejarano.golfassistant.viewmodels
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import me.alfredobejarano.golfassistant.data.Scorecard
 import me.alfredobejarano.golfassistant.data.ScorecardRepository
+import me.alfredobejarano.golfassistant.data.ScorecardRow
 import me.alfredobejarano.golfassistant.utils.ioExecute
 import javax.inject.Inject
 
 class MatchViewModel @Inject constructor(private val repository: ScorecardRepository) :
     ViewModel() {
+
+    private val _nextHandicapLiveData = MutableLiveData<Int>()
+    val nextHandicapLiveData = _nextHandicapLiveData as LiveData<Int>
 
     /**
      * Retrieves a [Scorecard] object by its database ID.
@@ -35,7 +41,7 @@ class MatchViewModel @Inject constructor(private val repository: ScorecardReposi
     fun retrieveScorecardRows(scoreCardId: Long) = ioExecute {
         val scoreCard = getScoreCardById(scoreCardId) ?: Scorecard()
         val rows = scoreCard.rows
-        rows
+        predictNextMatchHandicap(rows)
     }
 
     /**
@@ -54,6 +60,27 @@ class MatchViewModel @Inject constructor(private val repository: ScorecardReposi
     ) = ioExecute {
         repository.addNewRowToScorecard(scoreCardId, won, loss, match, handicap)
         val scorecard = getScoreCardById(scoreCardId)
-        scorecard?.rows ?: emptyList()
+        val rows = scorecard?.rows ?: emptyList()
+        predictNextMatchHandicap(rows)
+    }
+
+    /**
+     * Retrieves the last match handicap and predicts what the next match handicap will be.
+     * @param rows The current Scorecard match rows.
+     */
+    private fun predictNextMatchHandicap(rows: List<ScorecardRow>): List<ScorecardRow> {
+        if (rows.isNotEmpty()) {
+            val lastRow = rows.last()
+            var lastHandicap = lastRow.handicap
+
+            if (lastRow.isLoss()) {
+                lastHandicap--
+            } else {
+                lastHandicap++
+            }
+
+            _nextHandicapLiveData.postValue(lastHandicap)
+        }
+        return rows
     }
 }

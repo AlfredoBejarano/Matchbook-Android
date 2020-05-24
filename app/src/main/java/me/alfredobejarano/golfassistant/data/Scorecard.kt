@@ -13,7 +13,8 @@ data class Scorecard(
     val playerName: String = "",
     val date: String = "",
     @ColumnInfo(name = "scorecard_rows")
-    val rows: List<ScorecardRow> = emptyList()
+    val rows: List<ScorecardRow> = emptyList(),
+    var note: String = ""
 ) : Comparable<Scorecard> {
     override fun compareTo(other: Scorecard) = when {
         other.id < id -> -1
