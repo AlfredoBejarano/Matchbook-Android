@@ -1,21 +1,26 @@
 package me.alfredobejarano.golfassistant.utils
 
-import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import me.alfredobejarano.golfassistant.R
+import me.alfredobejarano.golfassistant.data.MatchResult
 
 abstract class BindingAdapter {
     companion object {
         @JvmStatic
-        @BindingAdapter("earnings")
-        fun setEarnings(field: TextView, earnings: String) {
-            field.text = earnings
+        @BindingAdapter("match_result")
+        fun setEarnings(field: TextView, matchResult: MatchResult) {
+            val resultDrawable = ContextCompat.getDrawable(
+                field.context, when (matchResult) {
+                    MatchResult.TIE -> R.drawable.ic_tie_amber_24dp
+                    MatchResult.WIN -> R.drawable.ic_arrow_upward_green_24dp
+                    MatchResult.LOSS -> R.drawable.ic_arrow_downward_red_24dp
+                }
+            )
+
+            field.setCompoundDrawablesRelativeWithIntrinsicBounds(resultDrawable, null, null, null)
         }
 
-        @JvmStatic
-        @BindingAdapter("android:visibility")
-        fun setVisibility(view: View, visible: Boolean) {
-            view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
-        }
     }
 }

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.support.AndroidSupportInjection
 import me.alfredobejarano.golfassistant.adapters.ScorecardRowAdapter
+import me.alfredobejarano.golfassistant.data.MatchResult
 import me.alfredobejarano.golfassistant.data.ScorecardRow
 import me.alfredobejarano.golfassistant.databinding.FragmentMatchBinding
 import me.alfredobejarano.golfassistant.injection.ViewModelFactory
@@ -57,7 +58,7 @@ class MatchFragment : Fragment() {
             })
 
     private fun getScorecardRows() = viewModel.retrieveScorecardRows()
-        .observe(viewLifecycleOwner, Observer { rows -> drawRows(rows) })
+        .observe(viewLifecycleOwner, Observer { rows -> rows?.run(::drawRows) })
 
     private fun drawRows(rows: List<ScorecardRow>) {
         withHandicap = rows.isNullOrEmpty()
@@ -79,12 +80,9 @@ class MatchFragment : Fragment() {
         fragment.show(childFragmentManager, CreateRowFragment.SHOW_TAG)
     }
 
-    private fun addScoreCardRow(handicap: Int?, match: String, money: Float, isLoss: Boolean) {
-        val won = if (isLoss) 0f else money
-        val loss = if (isLoss) money else 0f
-        viewModel.createScorecardRow(won, loss, match, handicap).observe(
-            viewLifecycleOwner, Observer { drawRows(it) })
-    }
+    private fun addScoreCardRow(bet: Double, match: String, result: MatchResult, handicap: Int?) =
+        viewModel.createScorecardRow(bet, match, result, handicap).observe(
+            viewLifecycleOwner, Observer { it?.run(::drawRows) })
 
     private fun observePredictedHandicap() = viewModel.nextHandicapLiveData.observe(
         viewLifecycleOwner,

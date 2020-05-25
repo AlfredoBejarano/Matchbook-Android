@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="me.alfredobejarano.golfassistant.data.MatchResult" />
+
         <variable
                 name="row"
                 type="me.alfredobejarano.golfassistant.data.ScorecardRow" />
@@ -67,7 +69,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@{row.handicapText}"
+                android:text="@{row.handicapAsText}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guidelineTwo"
                 app:layout_constraintStart_toStartOf="@id/guidelineOne"
@@ -78,7 +80,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@{row.matchText}"
+                android:text="@{row.match}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guidelineThree"
                 app:layout_constraintStart_toStartOf="@id/guidelineTwo"
@@ -87,41 +89,24 @@
 
         <TextView
                 android:id="@+id/earningsWon"
+                match_result="@{row.result}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_arrow_upward_green_24dp"
                 android:gravity="center"
                 android:maxLines="1"
-                android:visibility="@{!row.isLoss}"
+                android:text="@{row.betAsText}"
                 app:autoSizeTextType="uniform"
-                app:earnings="@{row.wonEarnings}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guidelineFour"
                 app:layout_constraintStart_toStartOf="@id/guidelineThree"
                 app:layout_constraintTop_toTopOf="parent"
+                tools:drawableStart="@drawable/ic_arrow_upward_green_24dp"
                 tools:text="$600" />
 
         <TextView
-                android:id="@+id/earningsLoss"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_arrow_downward_red_24dp"
-                android:gravity="center"
-                tools:visibility="gone"
-                android:visibility="@{row.isLoss}"
-                android:maxLines="1"
-                app:autoSizeTextType="uniform"
-                app:earnings="@{row.lossEarnings}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/guidelineFour"
-                app:layout_constraintStart_toStartOf="@id/guidelineThree"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="$300" />
-
-        <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="center_vertical|end"
                 android:maxLines="1"
                 android:text="@{total}"
                 app:autoSizeTextType="uniform"

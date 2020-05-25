@@ -9,6 +9,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.fragment_create_row.*
+import me.alfredobejarano.golfassistant.data.MatchResult
 import me.alfredobejarano.golfassistant.databinding.FragmentCreateRowBinding
 
 class CreateRowFragment : DialogFragment() {
@@ -18,7 +19,7 @@ class CreateRowFragment : DialogFragment() {
 
     private var withHandicap = true
     private lateinit var binding: FragmentCreateRowBinding
-    private lateinit var listener: (handicap: Int?, match: String, moneyAmount: Float, isLoss: Boolean) -> Unit
+    private lateinit var listener: (bet: Double, match: String, result: MatchResult, handicap: Int?) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +39,7 @@ class CreateRowFragment : DialogFragment() {
         dialog?.window?.run { setLayout(MATCH_PARENT, WRAP_CONTENT) }
     }
 
-    fun addButtonListener(listener: (handicap: Int?, match: String, moneyAmount: Float, isLoss: Boolean) -> Unit): CreateRowFragment {
+    fun addButtonListener(listener: (bet: Double, match: String, result: MatchResult, handicap: Int?) -> Unit): CreateRowFragment {
         this.listener = listener
         return this
     }
@@ -47,13 +48,13 @@ class CreateRowFragment : DialogFragment() {
         sendFieldToObserver(listener)
     }
 
-    private fun sendFieldToObserver(listener: (handicap: Int?, match: String, moneyAmount: Float, isLoss: Boolean) -> Unit) {
+    private fun sendFieldToObserver(listener: (bet: Double, match: String, result: MatchResult, handicap: Int?) -> Unit) {
         checkFields(handicapInput, matchInput, moneyAmountInput) {
             listener(
-                handicapInput.text?.toString()?.toIntOrNull(),
+                moneyAmountInput.text?.toString()?.toDoubleOrNull() ?: 0.0,
                 matchInput.text?.toString().orEmpty(),
-                moneyAmountInput.text?.toString()?.toFloatOrNull() ?: 0f,
-                isLossCheckBox.isChecked
+                getMatchResult(),
+                handicapInput.text?.toString()?.toIntOrNull()
             )
             dismissAllowingStateLoss()
         }
@@ -65,10 +66,16 @@ class CreateRowFragment : DialogFragment() {
 
     private fun checkField(editText: EditText?): Boolean {
         val empty = editText?.text.isNullOrBlank()
-        if(empty) {
+        if (empty) {
             editText?.error = getString(R.string.please_fill_this_field)
         }
         return !empty
+    }
+
+    private fun getMatchResult() = when (binding.matchResult.checkedRadioButtonId) {
+        R.id.won_match -> MatchResult.WIN
+        R.id.loss_match -> MatchResult.LOSS
+        else -> MatchResult.TIE
     }
 
     private fun checkFields(vararg views: EditText?, onSuccess: () -> Unit) {

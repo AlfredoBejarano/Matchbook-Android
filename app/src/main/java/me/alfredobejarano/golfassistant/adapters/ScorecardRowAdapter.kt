@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import me.alfredobejarano.golfassistant.data.ScorecardRow
 import me.alfredobejarano.golfassistant.databinding.ItemScorecardRowBinding
+import me.alfredobejarano.golfassistant.utils.asMoneyValue
 import java.text.DecimalFormat
 
 class ScorecardRowAdapter(private var rows: List<ScorecardRow>) :
@@ -19,11 +20,11 @@ class ScorecardRowAdapter(private var rows: List<ScorecardRow>) :
 
     override fun onBindViewHolder(holder: ScorecardRowViewHolder, position: Int) {
         val total = if (position == 0) {
-            rows[position].total
+            rows[position].bet
         } else {
-            var partialTotal = 0f
+            var partialTotal = 0.0
             for (i in 0 until position + 1) {
-                partialTotal += rows[i].total
+                partialTotal += rows[i].bet
             }
             partialTotal
         }
@@ -55,8 +56,8 @@ class ScorecardRowAdapter(private var rows: List<ScorecardRow>) :
     class ScorecardRowViewHolder(private val binding: ItemScorecardRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(row: ScorecardRow, total: Float) {
-            binding.total = "$${DecimalFormat("0000.##").parse(total.toString())}"
+        fun bind(row: ScorecardRow, total: Double) {
+            binding.total = total.asMoneyValue()
             binding.row = row
         }
     }

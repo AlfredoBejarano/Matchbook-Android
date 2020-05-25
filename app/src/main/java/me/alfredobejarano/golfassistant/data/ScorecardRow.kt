@@ -2,7 +2,9 @@ package me.alfredobejarano.golfassistant.data
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import me.alfredobejarano.golfassistant.utils.asMoneyValue
 import java.text.DecimalFormat
+import kotlin.math.absoluteValue
 
 data class ScorecardRow(
     @Expose
@@ -35,5 +37,5 @@ data class ScorecardRow(
     }
 
     fun getHandicapAsText() = handicap.toString()
-    fun getBetAsText() = "$${DecimalFormat("0000.##").parse(bet.toString())}"
+    fun getBetAsText() = bet.asMoneyValue()
 }
