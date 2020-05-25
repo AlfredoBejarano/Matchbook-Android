@@ -3,9 +3,12 @@ package me.alfredobejarano.golfassistant.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import me.alfredobejarano.golfassistant.data.MatchResult
 import me.alfredobejarano.golfassistant.data.Scorecard
 import me.alfredobejarano.golfassistant.data.ScorecardRepository
-import me.alfredobejarano.golfassistant.data.ScorecardRow
 import me.alfredobejarano.golfassistant.utils.ioExecute
 import javax.inject.Inject
 
@@ -39,26 +42,25 @@ class MatchViewModel @Inject constructor(private val repository: ScorecardReposi
 
     /**
      * Retrieves the player match rows stored in a given [Scorecard].
-     * @param scoreCardId Id of the scorecard object to fetch.
      */
     fun retrieveScorecardRows() = ioExecute {
-        val scoreCard = getScoreCard() ?: Scorecard()
-        val rows = scoreCard.rows
-        predictNextMatchHandicap(rows)
+        calculateNextMatchHandicap()
+        getScoreCard()?.rows
     }
 
     /**
      * Creates a new Row into a given scorecard object.
-     * @param won Money value won in the match.
-     * @param loss Money value lost in the match.
-     * @param handicap Optional value for the first match.
+     * @param bet Money value bet in the match.
+     * @param match Played match identifier.
+     * @param result Result of the played match (win, loss, tie).
+     * @param handicap Handicap played in the match (null for auto-increment).
      */
-    fun createScorecardRow(won: Float, loss: Float, match: String, handicap: Int? = null) =
+    fun createScorecardRow(bet: Double, match: String, result: MatchResult, handicap: Int? = null) =
         ioExecute {
-            repository.addNewRowToScorecard(scoreCardId, won, loss, match, handicap)
-            val scorecard = getScoreCard()
-            val rows = scorecard?.rows ?: emptyList()
-            predictNextMatchHandicap(rows)
+            repository.addNewRowToScorecard(scoreCardId, bet, match, result, handicap)
+            val rows = getScoreCard()?.rows ?: emptyList()
+            calculateNextMatchHandicap()
+            rows
         }
 
     /**
@@ -80,21 +82,10 @@ class MatchViewModel @Inject constructor(private val repository: ScorecardReposi
 
     /**
      * Retrieves the last match handicap and predicts what the next match handicap will be.
-     * @param rows The current Scorecard match rows.
      */
-    private fun predictNextMatchHandicap(rows: List<ScorecardRow>): List<ScorecardRow> {
-        if (rows.isNotEmpty()) {
-            val lastRow = rows.last()
-            var lastHandicap = lastRow.handicap
-
-            if (lastRow.isLoss()) {
-                lastHandicap--
-            } else {
-                lastHandicap++
-            }
-
-            _nextHandicapLiveData.postValue(lastHandicap)
+    private fun calculateNextMatchHandicap() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _nextHandicapLiveData.postValue(repository.getHandicapFrom(scoreCardId))
         }
-        return rows
     }
 }

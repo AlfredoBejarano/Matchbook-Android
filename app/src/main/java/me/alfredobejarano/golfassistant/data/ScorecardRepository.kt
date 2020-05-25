@@ -70,13 +70,19 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
     }
 
     /**
-     * Calculates the addition to the handicap for a [ScorecardRow] object.
-     * @return Int, the value to add for the [ScorecardRow] handicap.
+     * Calculates the addition to the handicap for a [ScorecardRow] object from the
+     * last row status.
+     *
+     * @param scorecardId Id of the scorecard holding the match results
      */
-    private fun getHandicapFrom(earned: Float, lost: Float) = when {
-        earned > lost -> -1
-        lost > earned -> +1
-        else -> 0
+    suspend fun getHandicapFrom(scorecardId: Long): Int {
+        val lastRow = getLastRowFrom(scorecardId)
+        val lastRowHandicap = lastRow.handicap
+        return when (lastRow.result) {
+            MatchResult.TIE -> lastRowHandicap
+            MatchResult.WIN -> lastRowHandicap - 1
+            MatchResult.LOSS -> lastRowHandicap + 1
+        }
     }
 
     /**
@@ -92,19 +98,18 @@ class ScorecardRepository @Inject constructor(private val scorecardDAO: Scorecar
      */
     suspend fun addNewRowToScorecard(
         scorecardId: Long,
-        won: Float,
-        loss: Float,
+        bet: Double,
         match: String,
+        result: MatchResult,
         handicap: Int? = null
     ): Scorecard? {
-        val lastRow = getLastRowFrom(scorecardId)
-        val newHandicap = handicap ?: lastRow.handicap + getHandicapFrom(won, loss)
-
+        val newHandicap = handicap ?: getHandicapFrom(scorecardId)
         val row = ScorecardRow(
             date = generateDate(),
             handicap = newHandicap,
             match = match,
-            bet = Bet(won, loss)
+            bet = bet,
+            result = result
         )
         return updateScorecardRows(scorecardId, row, false)
     }
