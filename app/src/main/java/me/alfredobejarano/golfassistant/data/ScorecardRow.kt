@@ -7,7 +7,7 @@ import java.text.DecimalFormat
 data class ScorecardRow(
     @Expose
     @SerializedName("bet")
-    val bet: Bet = Bet(),
+    val bet: Double = 0.0,
     @Expose
     @SerializedName("match")
     val match: String = "",
@@ -18,12 +18,15 @@ data class ScorecardRow(
     @SerializedName("handicap")
     val handicap: Int = 0,
     @Expose
+    @SerializedName("result")
+    val result: MatchResult = MatchResult.TIE,
+    @Expose
     @SerializedName("date")
     val date: String = ""
 ) : Comparable<ScorecardRow> {
     override fun compareTo(other: ScorecardRow): Int {
         val contentsAreTheSame =
-            other.bet == bet && other.match == match && other.order == order && other.handicap == handicap && other.date == date
+            other.bet == bet && other.match == match && other.order == order && other.handicap == handicap && other.date == date && other.result == result
         return if (contentsAreTheSame) {
             0
         } else {
@@ -31,14 +34,6 @@ data class ScorecardRow(
         }
     }
 
-    @Expose
-    @SerializedName("total")
-    val total = bet.earned - bet.lost
-
-    fun isLoss() = total < 0
-    fun getMatchText() = match.toString()
-    fun getHandicapText() = handicap.toString()
-    fun getWonEarnings() = "$${DecimalFormat("0000.##").parse(bet.earned.toString())}"
-    fun getLossEarnings() = "$${DecimalFormat("0000.##").parse(bet.lost.toString())}"
-    fun getTotalEarnings() = "$${DecimalFormat("0000.##").parse(total.toString())}"
+    fun getHandicapAsText() = handicap.toString()
+    fun getBetAsText() = "$${DecimalFormat("0000.##").parse(bet.toString())}"
 }
