@@ -1,7 +1,8 @@
 package me.alfredobejarano.golfassistant.data
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 class ScorecardRepository @Inject constructor(private val scorecardDAO: ScorecardDAO) {

@@ -1,5 +1,6 @@
 package me.alfredobejarano.golfassistant.viewmodels
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,9 +11,8 @@ import me.alfredobejarano.golfassistant.data.MatchResult
 import me.alfredobejarano.golfassistant.data.Scorecard
 import me.alfredobejarano.golfassistant.data.ScorecardRepository
 import me.alfredobejarano.golfassistant.utils.ioExecute
-import javax.inject.Inject
 
-class MatchViewModel @Inject constructor(private val repository: ScorecardRepository) :
+class MatchViewModel @ViewModelInject constructor(private val repository: ScorecardRepository) :
     ViewModel() {
     private var scoreCardId: Long = 0L
 

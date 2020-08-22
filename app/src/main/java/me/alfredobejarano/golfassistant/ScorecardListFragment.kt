@@ -6,42 +6,35 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import me.alfredobejarano.golfassistant.adapters.ScorecardAdapter
 import me.alfredobejarano.golfassistant.adapters.SwipeToDeleteCallback
 import me.alfredobejarano.golfassistant.data.Scorecard
 import me.alfredobejarano.golfassistant.databinding.FragmentScorecardListBinding
-import me.alfredobejarano.golfassistant.injection.ViewModelFactory
+import me.alfredobejarano.golfassistant.utils.viewBinding
 import me.alfredobejarano.golfassistant.viewmodels.ScorecardListViewModel
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class ScorecardListFragment : Fragment() {
-    @Inject
-    lateinit var factory: ViewModelFactory
-    private lateinit var viewModel: ScorecardListViewModel
-    private lateinit var binding: FragmentScorecardListBinding
+    private val viewModel: ScorecardListViewModel by viewModels()
+    private val binding by viewBinding(FragmentScorecardListBinding::inflate)
 
-    override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, state: Bundle?): View =
-        FragmentScorecardListBinding.inflate(inflater, parent, false).apply {
-            injectViewModelFactory()
-            binding = this
-            binding.matchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-            setupFABButton()
-            attachSwipeToDeleteHandler()
-            fetchScoreCardList()
-            requireActivity().title = getString(R.string.app_name)
-        }.root
+    override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, state: Bundle?) =
+        binding.root
 
-    private fun injectViewModelFactory() {
-        AndroidSupportInjection.inject(this)
-        viewModel = ViewModelProviders.of(this, factory)[ScorecardListViewModel::class.java]
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.matchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        setupFABButton()
+        attachSwipeToDeleteHandler()
+        fetchScoreCardList()
+        requireActivity().title = getString(R.string.app_name)
     }
 
     private fun fetchScoreCardList() =

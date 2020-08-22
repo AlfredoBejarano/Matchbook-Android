@@ -6,22 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import me.alfredobejarano.golfassistant.databinding.FragmentEditMatchNoteBinding
+import me.alfredobejarano.golfassistant.utils.viewBinding
 
-
+@AndroidEntryPoint
 class EditMatchNoteFragment : DialogFragment() {
     companion object {
         const val SHOW_TAG = "EDIT_MATCH_NOTE_FRAGMENT"
     }
 
     private var note: String? = null
-    private lateinit var binding: FragmentEditMatchNoteBinding
+    private val binding by viewBinding(FragmentEditMatchNoteBinding::inflate)
     private var listener: (dialog: DialogFragment, note: String) -> Unit = { _, _ -> }
 
     override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, state: Bundle?) =
-        FragmentEditMatchNoteBinding.inflate(inflater, parent, false).also {
-            binding = it
-        }.root
+        binding.root
 
     override fun onResume() {
         super.onResume()

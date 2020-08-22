@@ -7,26 +7,26 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.fragment.app.DialogFragment
-import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_create_match.*
 import me.alfredobejarano.golfassistant.databinding.FragmentCreateMatchBinding
+import me.alfredobejarano.golfassistant.utils.viewBinding
 
+@AndroidEntryPoint
 class CreateMatchFragment : DialogFragment() {
     companion object {
         const val SHOW_TAG = "CREATE_MATCH_FRAGMENT"
     }
 
-    private lateinit var binding: FragmentCreateMatchBinding
+    private val binding by viewBinding(FragmentCreateMatchBinding::inflate)
     private lateinit var listener: (name: String) -> Unit
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?, state: Bundle?
-    ): View = FragmentCreateMatchBinding.inflate(inflater, container, false).apply {
-        binding = this
-        setupAddButton()
-    }.root
+    override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, state: Bundle?) =
+        binding.root
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setupAddButton()
+    }
 
     override fun onStart() {
         super.onStart()

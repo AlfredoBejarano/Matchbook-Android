@@ -3,10 +3,14 @@ package me.alfredobejarano.golfassistant.injection
 import android.app.Application
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityRetainedComponent
 import me.alfredobejarano.golfassistant.data.AppDatabase
 
 @Module
-class LocalDataSourceModule(private val application: Application) {
+@InstallIn(ActivityRetainedComponent::class)
+class LocalDataSourceModule {
     @Provides
-    fun provideScorecardDAO() = AppDatabase.getInstance(application).provideScorecardDAO()
+    fun provideScorecardDAO(application: Application) =
+        AppDatabase.getInstance(application).provideScorecardDAO()
 }

@@ -1,51 +1,52 @@
 package me.alfredobejarano.golfassistant
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import dagger.android.support.AndroidSupportInjection
+import dagger.hilt.android.AndroidEntryPoint
 import me.alfredobejarano.golfassistant.adapters.ScorecardRowAdapter
 import me.alfredobejarano.golfassistant.data.MatchResult
 import me.alfredobejarano.golfassistant.data.ScorecardRow
 import me.alfredobejarano.golfassistant.databinding.FragmentMatchBinding
-import me.alfredobejarano.golfassistant.injection.ViewModelFactory
+import me.alfredobejarano.golfassistant.utils.viewBinding
 import me.alfredobejarano.golfassistant.viewmodels.MatchViewModel
-import java.util.*
-import javax.inject.Inject
+import java.util.Locale
 
+@AndroidEntryPoint
 class MatchFragment : Fragment() {
     private var withHandicap = true
 
-    @Inject
-    lateinit var factory: ViewModelFactory
     private var predictedHandicap: Int? = null
-    private lateinit var viewModel: MatchViewModel
-    private lateinit var binding: FragmentMatchBinding
+    private val viewModel: MatchViewModel by viewModels()
+    private val binding by viewBinding(FragmentMatchBinding::inflate)
+
+    override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, state: Bundle?) =
+        binding.root
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ) = FragmentMatchBinding.inflate(inflater, container, false).apply {
-        AndroidSupportInjection.inject(this@MatchFragment)
-        binding = this
-        scorecardRowList.layoutManager = LinearLayoutManager(context)
-        viewModel = ViewModelProviders.of(this@MatchFragment, factory)[MatchViewModel::class.java]
-        getScorecardId()
-        observePredictedHandicap()
-        getScorecardPlayerName()
-        getScorecardRows()
-        setupAddButton()
-    }.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.run {
+            scorecardRowList.layoutManager = LinearLayoutManager(context)
+            getScorecardId()
+            observePredictedHandicap()
+            getScorecardPlayerName()
+            getScorecardRows()
+            setupAddButton()
+        }
+    }
 
     private fun getScorecardId() =
         viewModel.setScoreCardId(MatchFragmentArgs.fromBundle(arguments ?: Bundle()).scorecardId)

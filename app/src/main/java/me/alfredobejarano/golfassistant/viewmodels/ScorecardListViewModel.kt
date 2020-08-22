@@ -1,12 +1,13 @@
 package me.alfredobejarano.golfassistant.viewmodels
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import me.alfredobejarano.golfassistant.data.Scorecard
 import me.alfredobejarano.golfassistant.data.ScorecardRepository
 import me.alfredobejarano.golfassistant.utils.ioExecute
 import javax.inject.Inject
 
-class ScorecardListViewModel @Inject constructor(private val repository: ScorecardRepository) :
+class ScorecardListViewModel @ViewModelInject constructor(private val repository: ScorecardRepository) :
     ViewModel() {
     /**
      * Retrieves a list of stored Scorecard matches.

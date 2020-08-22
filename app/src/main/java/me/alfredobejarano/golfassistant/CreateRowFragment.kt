@@ -8,29 +8,27 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_create_row.*
 import me.alfredobejarano.golfassistant.data.MatchResult
 import me.alfredobejarano.golfassistant.databinding.FragmentCreateRowBinding
+import me.alfredobejarano.golfassistant.utils.viewBinding
 
+@AndroidEntryPoint
 class CreateRowFragment : DialogFragment() {
     companion object {
         const val SHOW_TAG = "CREATE_ROW_FRAGMENT"
     }
 
     private var withHandicap = true
-    private lateinit var binding: FragmentCreateRowBinding
+    private val binding by viewBinding(FragmentCreateRowBinding::inflate)
     private lateinit var listener: (bet: Double, match: String, result: MatchResult, handicap: Int?) -> Unit
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?, state: Bundle?
-    ): View = FragmentCreateRowBinding.inflate(inflater, container, false).apply {
-        handicapInputContainer.visibility = if (withHandicap) View.VISIBLE else View.GONE
-        binding = this
-    }.root
+    override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, state: Bundle?) =
+        binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        handicapInputContainer.visibility = if (withHandicap) View.VISIBLE else View.GONE
         setupAddButton()
     }
 
