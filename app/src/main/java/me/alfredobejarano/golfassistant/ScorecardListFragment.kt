@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import me.alfredobejarano.golfassistant.adapters.ScorecardAdapter
@@ -23,6 +25,9 @@ import me.alfredobejarano.golfassistant.viewmodels.ScorecardListViewModel
 
 @AndroidEntryPoint
 class ScorecardListFragment : Fragment() {
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+
     private val viewModel: ScorecardListViewModel by viewModels()
     private val binding by viewBinding(FragmentScorecardListBinding::inflate)
 
@@ -31,9 +36,27 @@ class ScorecardListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.matchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.scorecardBottomSheet).apply {
+            addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    binding.scrimView.alpha = slideOffset * 0.5f
+                }
+
+                override fun onStateChanged(bottomSheet: View, newState: Int) = Unit
+            })
+        }
+
+        binding.bottomSheetTitle.setOnClickListener {
+            binding.playerNameInput.text = null
+            binding.playerNameInput.clearFocus()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
         setupFABButton()
         attachSwipeToDeleteHandler()
         fetchScoreCardList()
+        setupAddButton()
         requireActivity().title = getString(R.string.app_name)
     }
 
@@ -66,19 +89,17 @@ class ScorecardListFragment : Fragment() {
         }
     }
 
-    private fun createMatch(name: String) = viewModel.createScoreCard(name).observe(this, Observer {
-        displayScorecardListResult(it)
-    })
+    private fun createMatch(name: String) =
+        viewModel.createScoreCard(name).observe(viewLifecycleOwner, Observer {
+            binding.playerNameInput.text = null
+            binding.playerNameInput.clearFocus()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            displayScorecardListResult(it)
+        })
 
-
-    private fun launchAddMatchFragment() =
-        CreateMatchFragment().addButtonListener(this::createMatch).show(
-            requireFragmentManager(),
-            CreateMatchFragment.SHOW_TAG
-        )
-
-    private fun setupFABButton() =
-        binding.createScorecardButton.setOnClickListener { launchAddMatchFragment() }
+    private fun setupFABButton() = binding.createScorecardButton.setOnClickListener {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
 
     private fun attachSwipeToDeleteHandler() {
         val swipeHandler = object : SwipeToDeleteCallback() {
@@ -116,4 +137,20 @@ class ScorecardListFragment : Fragment() {
         .setPositiveButton(R.string.delete) { _, _ -> deleteScorecard(scorecard) }
         .setNegativeButton(R.string.cancel) { dialog, _ -> dialog?.dismiss() }
         .show()
+
+    private fun evaluateName(name: String?) = when {
+        name.isNullOrBlank() -> false
+        name.length < 2 -> false
+        else -> true
+    }
+
+    private fun sendPlayerNameToObserver(name: String?) = if (evaluateName(name)) {
+        createMatch(name.orEmpty())
+    } else {
+        binding.playerNameInput.error = getString(R.string.player_name_too_short)
+    }
+
+    private fun setupAddButton() = binding.matchCreateButton.setOnClickListener {
+        sendPlayerNameToObserver(binding.playerNameInput.text?.toString())
+    }
 }
